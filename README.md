@@ -7,7 +7,7 @@
 
 **A single-file, multilingual technical analysis tool for Gold (XAUUSD) with AI-ready output and TradingView integration.**
 
-🌐 **[Try it live →](https://yourname.github.io/xauusd-analyzer/)**
+🌐 **[Try it live →](https://mohsen-mollahasani.github.io/xauusd-analyzer/)**
 
 [🇬🇧 English](#-english) · [🇮🇷 فارسی](#-فارسی) · [🇷🇺 Русский](#-русский) · [🇨🇳 中文](#-中文)
 ---
