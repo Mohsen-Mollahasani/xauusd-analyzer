@@ -1,16 +1,15 @@
 # 📊 XAUUSD Analyzer v7.2
 
-https://mohsen-mollahasani.github.io/xauusd-analyzer/
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Open_Tool-success?style=for-the-badge)](https://yourname.github.io/xauusd-analyzer/)
+[![Version](https://img.shields.io/badge/version-7.2-blue?style=flat-square)](https://github.com/yourname/xauusd-analyzer)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
+[![Languages](https://img.shields.io/badge/languages-EN%20%7C%20FA%20%7C%20RU%20%7C%20ZH-orange?style=flat-square)](#)
 
 **A single-file, multilingual technical analysis tool for Gold (XAUUSD) with AI-ready output and TradingView integration.**
 
-![Version](https://img.shields.io/badge/version-7.2-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Languages](https://img.shields.io/badge/languages-EN%20%7C%20FA%20%7C%20RU%20%7C%20ZH-orange)
-![No Backend](https://img.shields.io/badge/backend-none-lightgrey)
+🌐 **[Try it live →](https://yourname.github.io/xauusd-analyzer/)**
 
 [🇬🇧 English](#-english) · [🇮🇷 فارسی](#-فارسی) · [🇷🇺 Русский](#-русский) · [🇨🇳 中文](#-中文)
-
 ---
 
 ## 🇬🇧 English
