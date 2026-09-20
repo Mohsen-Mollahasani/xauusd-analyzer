@@ -1,7 +1,7 @@
 # 📊 XAUUSD Analyzer v7.2
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Open_Tool-success?style=for-the-badge)](https://yourname.github.io/xauusd-analyzer/)
-[![Version](https://img.shields.io/badge/version-7.2-blue?style=flat-square)](https://github.com/yourname/xauusd-analyzer)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Open_Tool-success?style=for-the-badge)](https://mohsen-mollahasani.github.io/xauusd-analyzer/)
+[![Version](https://img.shields.io/badge/version-7.2-blue?style=flat-square)](https://github.com/mohsen-mollahasani/xauusd-analyzer)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
 [![Languages](https://img.shields.io/badge/languages-EN%20%7C%20FA%20%7C%20RU%20%7C%20ZH-orange?style=flat-square)](#)
 
