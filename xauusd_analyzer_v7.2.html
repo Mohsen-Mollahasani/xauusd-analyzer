@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XAUUSD Analyzer v7.2 – Multilingual</title>
+<style>
+  body{font-family:Tahoma,Arial,sans-serif;max-width:1100px;margin:auto;padding:14px;background:#0f0f0f;color:#e6e6e6;line-height:1.45}
+  h1{font-size:20px;margin:0 0 10px}
+  .box{background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:12px;margin:10px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+  button{font-size:14px;padding:9px 14px;border-radius:8px;border:1px solid #555;margin:3px;cursor:pointer;font-weight:600}
+  button.primary{background:#e8e8e8;color:#111}
+  button.secondary{background:#2a2a2a;color:#ddd}
+  button.accent{background:#1a3a5c;color:#a8d4ff;border-color:#2a5a8c}
+  button.donate{background:#3a2a0a;color:#ffb060;border-color:#5a4a1a}
+  select{font-size:13px;padding:8px 10px;border-radius:6px;border:1px solid #555;background:#0a0a0a;color:#e6e6e6;cursor:pointer}
+  input[type=text]{font-size:13px;padding:8px 10px;border-radius:6px;border:1px solid #555;background:#0a0a0a;color:#e6e6e6;font-family:monospace;width:100%;max-width:400px;box-sizing:border-box}
+  input[type=text].valid{border-color:#3a8c3a}
+  input[type=text].invalid{border-color:#8c3a3a}
+  pre{white-space:pre-wrap;direction:ltr;text-align:left;background:#080808;padding:12px;border-radius:8px;overflow:auto;font-size:12.5px;line-height:1.4;border:1px solid #222;max-height:400px}
+  .small{color:#999;font-size:12px}
+  .tag{display:inline-block;padding:1px 7px;border-radius:5px;font-size:11.5px}
+  .up{background:#0d3d1a;color:#7dffa3}
+  .down{background:#3d0d0d;color:#ff9b9b}
+  .neutral{background:#333;color:#ccc}
+  .warn{color:#ff9b9b}
+  .info{color:#7db8ff}
+  .ok{color:#7dffa3}
+  hr{border:none;border-top:1px solid #333;margin:8px 0}
+  .session{font-weight:600;padding:2px 8px;border-radius:6px;font-size:12px}
+  .session.asia{background:#2a2a1a;color:#e0d080}
+  .session.london{background:#1a2a3a;color:#80c0e0}
+  .session.ny{background:#1a2a1a;color:#80e0a0}
+  .session.off{background:#2a1a1a;color:#c08080}
+  .zone-near{outline:1px solid #e0a020;outline-offset:2px;border-radius:4px;padding:2px 4px}
+  .divergence{background:#3a2a1a;color:#ffb060;padding:2px 8px;border-radius:6px;font-size:12px;display:inline-block;margin-top:4px}
+  .wallet-box{background:#0a0a0a;border:1px dashed #5a4a1a;padding:8px;border-radius:6px;font-family:monospace;font-size:12px;color:#ffb060;word-break:break-all;margin-top:6px}
+  .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);display:none;z-index:1000;align-items:center;justify-content:center;padding:20px}
+  .modal-overlay.show{display:flex}
+  .modal{background:#1a1a1a;border:1px solid #444;border-radius:12px;max-width:800px;width:100%;max-height:90vh;overflow-y:auto;padding:20px;position:relative}
+  .modal h2{margin-top:0;color:#7db8ff;font-size:18px}
+  .modal-close{position:absolute;top:12px;right:12px;background:none;border:none;color:#999;font-size:24px;cursor:pointer;padding:4px 10px;font-weight:bold}
+  .modal-close:hover{color:#fff}
+  .step{background:#0f0f0f;border:1px solid #2a2a2a;border-radius:8px;padding:12px;margin:10px 0}
+  .step-num{display:inline-block;background:#1a3a5c;color:#7db8ff;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;font-weight:bold;margin-right:8px;font-size:13px}
+  .pine-code{background:#080808;border:1px solid #222;border-radius:8px;padding:12px;max-height:300px;overflow:auto;font-family:monospace;font-size:11.5px;direction:ltr;text-align:left;white-space:pre;color:#c8c8c8;line-height:1.3}
+</style>
+</head>
+<body>
+
+<h1 data-i18n="title">📊 XAUUSD Analyzer v7.2</h1>
+<p class="small" data-i18n="subtitle">Weighted Confluence | Ranked Zones | AI-Ready Output</p>
+
+<div class="box" style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:8px 12px">
+  <span class="small" data-i18n="language">Language:</span>
+  <select id="langSelect" onchange="setLang(this.value)">
+    <option value="en">English</option>
+    <option value="fa">فارسی</option>
+    <option value="ru">Русский</option>
+    <option value="zh">中文</option>
+  </select>
+</div>
+
+<div class="box" id="apiKeyBox">
+  <b data-i18n="apiKeyTitle">🔑 API Key Setup</b>
+  <p class="small" style="margin:6px 0">
+    <span data-i18n="apiKeyHelp1">This tool uses</span>
+    <a href="https://twelvedata.com" target="_blank" style="color:#7db8ff">Twelve Data</a>
+    <span data-i18n="apiKeyHelp2">free API. Get your own key (30 sec, no credit card) and paste it below.</span>
+  </p>
+  <p class="small" style="margin:6px 0" data-i18n="apiKeyPrivacy">Your key is stored only in your browser (localStorage) — never sent to anyone else.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
+    <input type="text" id="apiKeyInput" data-i18n-placeholder="apiKeyPlaceholder" placeholder="Paste your Twelve Data API key..." />
+    <button class="primary" onclick="saveApiKey()" data-i18n="saveKey">💾 Save & Test</button>
+    <button class="secondary" onclick="clearApiKey()" data-i18n="clearKey">🗑 Clear</button>
+  </div>
+  <div class="small" style="margin-top:8px" id="apiKeyStatus"></div>
+</div>
+
+<div class="box" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+  <button class="primary" onclick="loadAll()" data-i18n="loadAll">📊 Load All</button>
+  <button class="accent" onclick="loadHigherOnly()" data-i18n="loadHigher">⚡ Higher TF only (4H+Daily)</button>
+  <button class="secondary" onclick="copyOutput()" data-i18n="copyAI">📋 Copy for AI</button>
+  <button class="secondary" style="background:#2a3a2a;color:#7dffa3;border-color:#3a5a3a" onclick="copyForTradingView()" data-i18n="copyTV">📈 Copy for TradingView</button>
+  <button class="donate" onclick="toggleDonate()" data-i18n="donate">💛 Donate</button>
+  <span id="sessionBadge" class="session off">Session: —</span>
+</div>
+
+<div class="box" id="donateBox" style="display:none">
+  <b data-i18n="donateTitle">💛 Support this project</b>
+  <p class="small" style="margin:6px 0" data-i18n="donateText">If this tool helped you, a small donation is appreciated.</p>
+  <div><b data-i18n="donateNetwork">Network:</b> BNB Smart Chain (BSC) / BEP-20</div>
+  <div><b data-i18n="donateAddress">Wallet Address:</b></div>
+  <div class="wallet-box">0x63013226D82d1070eC98fBA2b3fdD6E626e9E8f6</div>
+  <button class="secondary" style="margin-top:8px" onclick="copyWallet()" data-i18n="copyWallet">📋 Copy Wallet Address</button>
+  <span class="small" id="walletCopyStatus" style="margin-left:8px"></span>
+  <p class="small" style="margin-top:10px;color:#ffb060" data-i18n="donateWarning">⚠️ Send only BEP-20 tokens to this address.</p>
+</div>
+
+<div id="status" class="box" data-i18n="statusReady">Ready</div>
+<div id="cards" class="grid"></div>
+
+<div class="box" id="sessionsBox" style="display:none">
+  <h3 style="margin:0 0 8px" data-i18n="sessionHLLabel">Session High / Low (Today)</h3>
+  <div id="sessionsContent" class="small"></div>
+</div>
+
+<div class="box" id="levelsBox" style="display:none">
+  <h3 style="margin:0 0 8px" data-i18n="levelsLabel">Key Levels (4H + Daily)</h3>
+  <div id="levelsContent" class="small"></div>
+</div>
+
+<div class="box" id="divergenceBox" style="display:none">
+  <h3 style="margin:0 0 8px" data-i18n="divergenceLabel">Divergence (RSI vs Price)</h3>
+  <div id="divergenceContent" class="small"></div>
+</div>
+
+<div class="box">
+  <h3 style="margin:0 0 8px" data-i18n="outputLabel">Compact Output for AI</h3>
+  <pre id="output">Click "Load All" to fetch data.</pre>
+</div>
+
+<div class="modal-overlay" id="tvModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeTVModal()">×</button>
+    <h2 data-i18n="tvModalTitle">📈 TradingView Setup Guide</h2>
+    <p data-i18n="tvModalIntro">You just copied 4 lines. Follow these steps:</p>
+    <div class="step">
+      <span class="step-num">1</span>
+      <b data-i18n="tvStep1Title">Install the Pine Script (one-time)</b>
+      <p class="small" style="margin:8px 0 4px 0" data-i18n="tvStep1Text">TradingView → Pine Editor → paste → Save → Add to chart.</p>
+      <button class="accent" onclick="togglePineCode()" data-i18n="showPine">📋 Show / Copy Pine Script</button>
+      <div id="pineCodeBox" style="display:none;margin-top:10px">
+        <div class="pine-code" id="pineCode"></div>
+        <button class="primary" style="margin-top:8px" onclick="copyPineCode()" data-i18n="copyPine">📋 Copy Pine Script</button>
+        <span class="small" id="pineCopyStatus" style="margin-left:8px"></span>
+      </div>
+    </div>
+    <div class="step">
+      <span class="step-num">2</span>
+      <b data-i18n="tvStep2Title">Open indicator settings</b>
+      <p class="small" style="margin:6px 0" data-i18n="tvStep2Text">Click the indicator → Settings (gear icon).</p>
+    </div>
+    <div class="step">
+      <span class="step-num">3</span>
+      <b data-i18n="tvStep3Title">Paste the 4 lines</b>
+      <p class="small" style="margin:6px 0" data-i18n="tvStep3Text">Each line matches one input.</p>
+      <div id="tvCopiedValues" class="small" style="background:#0a0a0a;padding:8px;border-radius:6px;font-family:monospace;margin-top:8px"></div>
+    </div>
+    <div class="step">
+      <span class="step-num">4</span>
+      <b data-i18n="tvStep4Title">Done!</b>
+      <p class="small" style="margin:6px 0" data-i18n="tvStep4Text">Strongest = thick, Nearest = dashed.</p>
+    </div>
+    <button class="secondary" style="margin-top:16px" onclick="closeTVModal()" data-i18n="closeModal">Close</button>
+  </div>
+</div>
+
+<script>
+const TRANSLATIONS = {
+  en: {
+    title: "📊 XAUUSD Analyzer v7.2",
+    subtitle: "Weighted Confluence | Ranked Zones | AI-Ready Output",
+    language: "Language:",
+    apiKeyTitle: "🔑 API Key Setup",
+    apiKeyHelp1: "This tool uses",
+    apiKeyHelp2: "free API. Get your own key (30 sec, no credit card) and paste it below.",
+    apiKeyPrivacy: "Your key is stored only in your browser (localStorage) — never sent to anyone else.",
+    apiKeyPlaceholder: "Paste your Twelve Data API key...",
+    saveKey: "💾 Save & Test",
+    clearKey: "🗑 Clear",
+    keyNotSet: "Status: ❌ No key set",
+    keySaved: "Status: ✅ Key saved and validated",
+    keyLoaded: "Status: ✅ Key loaded from browser",
+    keyTesting: "Status: ⏳ Testing key...",
+    keyInvalid: "Status: ❌ Invalid key — {msg}",
+    keyTooShort: "Status: ❌ Key too short (min 10 chars)",
+    keyCleared: "Status: 🗑 Key cleared",
+    loadAll: "📊 Load All",
+    loadHigher: "⚡ Higher TF only (4H+Daily)",
+    copyAI: "📋 Copy for AI",
+    copyTV: "📈 Copy for TradingView",
+    donate: "💛 Donate",
+    donateTitle: "💛 Support this project",
+    donateText: "If this tool helped you, a small donation is appreciated.",
+    donateNetwork: "Network:",
+    donateAddress: "Wallet Address:",
+    copyWallet: "📋 Copy Wallet Address",
+    donateWarning: "⚠️ Send only BEP-20 tokens to this address.",
+    statusReady: "Ready",
+    statusFetching: "Fetching data...",
+    statusFetchingTF: "Fetching {tf}...",
+    statusNoKey: "❌ API Key not set. Please paste your key above.",
+    statusLoaded: "✅ Data loaded",
+    statusCopiedAI: "✅ Copied — now paste into your AI.",
+    statusCopiedTV: "✅ Copied 4 lines for TradingView. Follow the guide.",
+    statusCopyFail: "Text selected — press Ctrl+C.",
+    sessionHLLabel: "Session High / Low (Today)",
+    levelsLabel: "Key Levels (4H + Daily)",
+    divergenceLabel: "Divergence (RSI vs Price)",
+    outputLabel: "Compact Output for AI",
+    tvModalTitle: "📈 TradingView Setup Guide",
+    tvModalIntro: "You just copied 4 lines. Follow these steps:",
+    tvStep1Title: "Install the Pine Script (one-time)",
+    tvStep1Text: "TradingView → Pine Editor → paste → Save → Add to chart.",
+    showPine: "📋 Show / Copy Pine Script",
+    copyPine: "📋 Copy Pine Script",
+    tvStep2Title: "Open indicator settings",
+    tvStep2Text: "Click the indicator → Settings (gear icon).",
+    tvStep3Title: "Paste the 4 lines",
+    tvStep3Text: "Each line matches one input.",
+    tvStep4Title: "Done!",
+    tvStep4Text: "Strongest = thick, Nearest = dashed.",
+    closeModal: "Close",
+    bullish: "Bullish",
+    bearish: "Bearish",
+    range: "Range",
+    aboveCloud: "Above Cloud",
+    belowCloud: "Below Cloud",
+    insideCloud: "Inside Cloud",
+    lastClose: "Last close",
+    refPrice: "Ref price",
+    trend: "Trend",
+    distEMA: "Dist from EMA20/50",
+    ichimokuNow: "Ichimoku now",
+    distCloud: "Dist to Cloud Top/Bottom",
+    structure: "Structure",
+    swingHL: "Swing H/L",
+    sessionClosed: "Weekend Closed",
+    sessionLondonNY: "London + NY Overlap",
+    sessionLondon: "London",
+    sessionNY: "New York",
+    sessionAsia: "Asia",
+    sessionLowVol: "Low Volume / Closed"
+  },
+  fa: {
+    title: "📊 تحلیل‌گر XAUUSD نسخه 7.2",
+    subtitle: "هم‌رأیی وزن‌دار | سطوح رتبه‌بندی‌شده | خروجی آماده برای AI",
+    language: "زبان:",
+    apiKeyTitle: "🔑 تنظیم کلید API",
+    apiKeyHelp1: "این ابزار از API رایگان",
+    apiKeyHelp2: "استفاده می‌کنه. کلید خودت رو بگیر (۳۰ ثانیه) و پایین پیست کن.",
+    apiKeyPrivacy: "کلید فقط توی مرورگر خودت ذخیره می‌شه — به هیچ‌جا ارسال نمی‌شه.",
+    apiKeyPlaceholder: "کلید API خود را پیست کنید...",
+    saveKey: "💾 ذخیره و تست",
+    clearKey: "🗑 پاک کردن",
+    keyNotSet: "وضعیت: ❌ کلید تنظیم نشده",
+    keySaved: "وضعیت: ✅ کلید ذخیره و تأیید شد",
+    keyLoaded: "وضعیت: ✅ کلید از مرورگر بارگذاری شد",
+    keyTesting: "وضعیت: ⏳ در حال تست کلید...",
+    keyInvalid: "وضعیت: ❌ کلید نامعتبر — {msg}",
+    keyTooShort: "وضعیت: ❌ کلید کوتاه‌تر از حد مجاز (حداقل ۱۰ کاراکتر)",
+    keyCleared: "وضعیت: 🗑 کلید پاک شد",
+    loadAll: "📊 دریافت همه",
+    loadHigher: "⚡ فقط 4H + Daily",
+    copyAI: "📋 کپی برای AI",
+    copyTV: "📈 کپی برای TradingView",
+    donate: "💛 حمایت",
+    donateTitle: "💛 حمایت از این پروژه",
+    donateText: "اگه این ابزار بهت کمک کرد، یه دونیت کوچیک ممنون می‌شم.",
+    donateNetwork: "شبکه:",
+    donateAddress: "آدرس ولت:",
+    copyWallet: "📋 کپی آدرس ولت",
+    donateWarning: "⚠️ فقط توکن‌های BEP-20 رو به این آدرس بفرست.",
+    statusReady: "آماده",
+    statusFetching: "در حال دریافت داده...",
+    statusFetchingTF: "در حال دریافت {tf}...",
+    statusNoKey: "❌ کلید API تنظیم نشده. لطفاً کلید خود رو بالا پیست کنید.",
+    statusLoaded: "✅ داده‌ها دریافت شد",
+    statusCopiedAI: "✅ کپی شد — حالا در AI پیست کن.",
+    statusCopiedTV: "✅ ۴ خط کپی شد. راهنما رو دنبال کن.",
+    statusCopyFail: "متن انتخاب شد — با Ctrl+C دستی کپی کن.",
+    sessionHLLabel: "سقف/کف سشن امروز",
+    levelsLabel: "سطوح کلیدی (4H + Daily)",
+    divergenceLabel: "واگرایی (RSI vs Price)",
+    outputLabel: "خروجی فشرده برای AI",
+    tvModalTitle: "📈 راهنمای نصب TradingView",
+    tvModalIntro: "الان ۴ خط کپی شد. این مراحل رو دنبال کن:",
+    tvStep1Title: "اندیکاتور Pine Script رو نصب کن (یک‌بار)",
+    tvStep1Text: "TradingView → Pine Editor → کد رو پیست کن → Save → Add to chart.",
+    showPine: "📋 نمایش / کپی Pine Script",
+    copyPine: "📋 کپی Pine Script",
+    tvStep2Title: "تنظیمات اندیکاتور رو باز کن",
+    tvStep2Text: "روی اسم اندیکاتور کلیک کن → Settings.",
+    tvStep3Title: "۴ خطی که کپی کردی رو پیست کن",
+    tvStep3Text: "هر خط مربوط به یه input هست.",
+    tvStep4Title: "تمام!",
+    tvStep4Text: "Strongest = ضخیم، Nearest = خط‌چین.",
+    closeModal: "بستن",
+    bullish: "صعودی",
+    bearish: "نزولی",
+    range: "رنج",
+    aboveCloud: "بالای ابر",
+    belowCloud: "زیر ابر",
+    insideCloud: "داخل ابر",
+    lastClose: "آخرین بسته",
+    refPrice: "قیمت مرجع",
+    trend: "روند",
+    distEMA: "فاصله از EMA20/50",
+    ichimokuNow: "ایچیموکو الان",
+    distCloud: "فاصله تا سقف/کف ابر",
+    structure: "ساختار",
+    swingHL: "Swing H/L",
+    sessionClosed: "تعطیلی آخر هفته",
+    sessionLondonNY: "لندن + نیویورک",
+    sessionLondon: "لندن",
+    sessionNY: "نیویورک",
+    sessionAsia: "آسیا",
+    sessionLowVol: "بازار کم‌حجم / بسته"
+  },
+  ru: {
+    title: "📊 Анализатор XAUUSD v7.2",
+    subtitle: "Взвешенная конвергенция | Ранжированные зоны | Готово для AI",
+    language: "Язык:",
+    apiKeyTitle: "🔑 Настройка API-ключа",
+    apiKeyHelp1: "Этот инструмент использует бесплатный API",
+    apiKeyHelp2: ". Получите свой ключ и вставьте ниже.",
+    apiKeyPrivacy: "Ваш ключ хранится только в браузере.",
+    apiKeyPlaceholder: "Вставьте ваш API-ключ...",
+    saveKey: "💾 Сохранить и проверить",
+    clearKey: "🗑 Очистить",
+    keyNotSet: "Статус: ❌ Ключ не установлен",
+    keySaved: "Статус: ✅ Ключ сохранён",
+    keyLoaded: "Статус: ✅ Ключ загружен",
+    keyTesting: "Статус: ⏳ Проверка...",
+    keyInvalid: "Статус: ❌ Неверный ключ — {msg}",
+    keyTooShort: "Статус: ❌ Ключ слишком короткий",
+    keyCleared: "Статус: 🗑 Ключ очищен",
+    loadAll: "📊 Загрузить всё",
+    loadHigher: "⚡ Только старшие TF",
+    copyAI: "📋 Копировать для AI",
+    copyTV: "📈 Копировать для TradingView",
+    donate: "💛 Поддержать",
+    donateTitle: "💛 Поддержать проект",
+    donateText: "Если инструмент помог, буду признателен.",
+    donateNetwork: "Сеть:",
+    donateAddress: "Адрес кошелька:",
+    copyWallet: "📋 Копировать адрес",
+    donateWarning: "⚠️ Отправляйте только токены BEP-20.",
+    statusReady: "Готово",
+    statusFetching: "Загрузка данных...",
+    statusFetchingTF: "Загрузка {tf}...",
+    statusNoKey: "❌ Ключ не установлен.",
+    statusLoaded: "✅ Данные загружены",
+    statusCopiedAI: "✅ Скопировано.",
+    statusCopiedTV: "✅ 4 строки скопированы.",
+    statusCopyFail: "Текст выделен — Ctrl+C.",
+    sessionHLLabel: "Максимум/минимум сессии",
+    levelsLabel: "Ключевые уровни",
+    divergenceLabel: "Дивергенция",
+    outputLabel: "Вывод для AI",
+    tvModalTitle: "📈 Руководство TradingView",
+    tvModalIntro: "Следуйте шагам:",
+    tvStep1Title: "Установите Pine Script",
+    tvStep1Text: "TradingView → Pine Editor → вставьте → Save.",
+    showPine: "📋 Показать Pine Script",
+    copyPine: "📋 Копировать",
+    tvStep2Title: "Откройте настройки",
+    tvStep2Text: "Кликните на индикатор → Settings.",
+    tvStep3Title: "Вставьте 4 строки",
+    tvStep3Text: "Каждая строка — одно поле.",
+    tvStep4Title: "Готово!",
+    tvStep4Text: "Strongest = толстые, Nearest = пунктир.",
+    closeModal: "Закрыть",
+    bullish: "Бычий",
+    bearish: "Медвежий",
+    range: "Боковик",
+    aboveCloud: "Над облаком",
+    belowCloud: "Под облаком",
+    insideCloud: "В облаке",
+    lastClose: "Закрытие",
+    refPrice: "Цена",
+    trend: "Тренд",
+    distEMA: "От EMA20/50",
+    ichimokuNow: "Ichimoku",
+    distCloud: "До границ облака",
+    structure: "Структура",
+    swingHL: "Swing H/L",
+    sessionClosed: "Выходные",
+    sessionLondonNY: "Лондон + NY",
+    sessionLondon: "Лондон",
+    sessionNY: "Нью-Йорк",
+    sessionAsia: "Азия",
+    sessionLowVol: "Закрыто"
+  },
+  zh: {
+    title: "📊 XAUUSD 分析器 v7.2",
+    subtitle: "加权汇合 | 分级区域 | AI 就绪",
+    language: "语言：",
+    apiKeyTitle: "🔑 API 密钥",
+    apiKeyHelp1: "本工具使用免费的",
+    apiKeyHelp2: " API。获取密钥并粘贴到下方。",
+    apiKeyPrivacy: "密钥仅存储在浏览器中。",
+    apiKeyPlaceholder: "粘贴您的 API 密钥...",
+    saveKey: "💾 保存并测试",
+    clearKey: "🗑 清除",
+    keyNotSet: "状态：❌ 未设置密钥",
+    keySaved: "状态：✅ 密钥已保存",
+    keyLoaded: "状态：✅ 已加载密钥",
+    keyTesting: "状态：⏳ 测试中...",
+    keyInvalid: "状态：❌ 无效密钥 — {msg}",
+    keyTooShort: "状态：❌ 密钥太短",
+    keyCleared: "状态：🗑 已清除",
+    loadAll: "📊 加载全部",
+    loadHigher: "⚡ 仅高级周期",
+    copyAI: "📋 复制给 AI",
+    copyTV: "📈 复制给 TradingView",
+    donate: "💛 捐赠",
+    donateTitle: "💛 支持本项目",
+    donateText: "欢迎小额捐赠。",
+    donateNetwork: "网络：",
+    donateAddress: "钱包地址：",
+    copyWallet: "📋 复制地址",
+    donateWarning: "⚠️ 仅发送 BEP-20 代币。",
+    statusReady: "就绪",
+    statusFetching: "获取数据...",
+    statusFetchingTF: "获取 {tf}...",
+    statusNoKey: "❌ 未设置密钥。",
+    statusLoaded: "✅ 数据已加载",
+    statusCopiedAI: "✅ 已复制。",
+    statusCopiedTV: "✅ 已复制 4 行。",
+    statusCopyFail: "已选中 — 按 Ctrl+C。",
+    sessionHLLabel: "今日时段高/低",
+    levelsLabel: "关键水平",
+    divergenceLabel: "背离",
+    outputLabel: "AI 输出",
+    tvModalTitle: "📈 TradingView 指南",
+    tvModalIntro: "按以下步骤：",
+    tvStep1Title: "安装 Pine Script",
+    tvStep1Text: "TradingView → Pine Editor → 粘贴 → Save。",
+    showPine: "📋 显示 Pine Script",
+    copyPine: "📋 复制",
+    tvStep2Title: "打开指标设置",
+    tvStep2Text: "点击指标 → Settings。",
+    tvStep3Title: "粘贴 4 行",
+    tvStep3Text: "每行对应一个输入。",
+    tvStep4Title: "完成！",
+    tvStep4Text: "Strongest = 粗线，Nearest = 虚线。",
+    closeModal: "关闭",
+    bullish: "看涨",
+    bearish: "看跌",
+    range: "震荡",
+    aboveCloud: "云上",
+    belowCloud: "云下",
+    insideCloud: "云中",
+    lastClose: "收盘",
+    refPrice: "参考价",
+    trend: "趋势",
+    distEMA: "距 EMA20/50",
+    ichimokuNow: "Ichimoku",
+    distCloud: "距云层边界",
+    structure: "结构",
+    swingHL: "Swing H/L",
+    sessionClosed: "周末休市",
+    sessionLondonNY: "伦敦 + 纽约",
+    sessionLondon: "伦敦",
+    sessionNY: "纽约",
+    sessionAsia: "亚洲",
+    sessionLowVol: "低量 / 休市"
+  }
+};
+
+let currentLang = "en";
+
+function t(key, vars={}){
+  let str = (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS.en[key] || key;
+  for(const k in vars) str = str.replace(`{${k}}`, vars[k]);
+  return str;
+}
+
+function detectLang(){
+  const saved = localStorage.getItem("xauusd_lang");
+  if(saved && TRANSLATIONS[saved]) return saved;
+  const nav = (navigator.language || "en").toLowerCase();
+  if(nav.startsWith("fa")) return "fa";
+  if(nav.startsWith("ru")) return "ru";
+  if(nav.startsWith("zh")) return "zh";
+  return "en";
+}
+
+function setLang(lang){
+  if(!TRANSLATIONS[lang]) lang = "en";
+  currentLang = lang;
+  localStorage.setItem("xauusd_lang", lang);
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === "fa") ? "rtl" : "ltr";
+  document.getElementById("langSelect").value = lang;
+  applyTranslations();
+  if(allData["4h"]){
+    renderAllSections();
+    document.getElementById("output").textContent = makeOutput();
+  }
+  updateSessionBadge();
+  refreshApiKeyStatus();
+}
+
+function applyTranslations(){
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    el.textContent = t(el.getAttribute("data-i18n"));
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    el.placeholder = t(el.getAttribute("data-i18n-placeholder"));
+  });
+  document.title = t("title");
+}
+
+function getLangName(){
+  return { en:"English", fa:"Persian (Farsi)", ru:"Russian", zh:"Chinese (Simplified)" }[currentLang] || "English";
+}
+
+let API_KEY = "";
+
+function refreshApiKeyStatus(){
+  if(API_KEY){
+    const saved = localStorage.getItem("xauusd_api_key");
+    document.getElementById("apiKeyStatus").innerHTML = saved
+      ? `<span class="ok">${t("keyLoaded")}</span>`
+      : `<span class="ok">${t("keySaved")}</span>`;
+  } else {
+    document.getElementById("apiKeyStatus").innerHTML = `<span class="warn">${t("keyNotSet")}</span>`;
+  }
+}
+
+function loadApiKey(){
+  const saved = localStorage.getItem("xauusd_api_key");
+  if(saved){
+    API_KEY = saved;
+    document.getElementById("apiKeyInput").value = saved;
+    document.getElementById("apiKeyInput").classList.add("valid");
+  }
+  refreshApiKeyStatus();
+}
+
+async function saveApiKey(){
+  const val = document.getElementById("apiKeyInput").value.trim();
+  const input = document.getElementById("apiKeyInput");
+  const status = document.getElementById("apiKeyStatus");
+  input.classList.remove("valid","invalid");
+  if(!val || val.length < 10){
+    status.innerHTML = `<span class="warn">${t("keyTooShort")}</span>`;
+    input.classList.add("invalid");
+    return;
+  }
+  status.innerHTML = `<span class="info">${t("keyTesting")}</span>`;
+  try{
+    const testUrl = `https://api.twelvedata.com/price?symbol=XAU/USD&exchange=OANDA&apikey=${encodeURIComponent(val)}`;
+    const r = await fetch(testUrl);
+    const j = await r.json();
+    if(j.status === "error" || j.code){
+      const msg = j.message || "Invalid key";
+      status.innerHTML = `<span class="warn">${t("keyInvalid", {msg})}</span>`;
+      input.classList.add("invalid");
+      return;
+    }
+    API_KEY = val;
+    localStorage.setItem("xauusd_api_key", val);
+    input.classList.add("valid");
+    status.innerHTML = `<span class="ok">${t("keySaved")}</span>`;
+  }catch(e){
+    status.innerHTML = `<span class="warn">${t("keyInvalid", {msg: e.message})}</span>`;
+    input.classList.add("invalid");
+  }
+}
+
+function clearApiKey(){
+  API_KEY = "";
+  localStorage.removeItem("xauusd_api_key");
+  document.getElementById("apiKeyInput").value = "";
+  document.getElementById("apiKeyInput").classList.remove("valid","invalid");
+  refreshApiKeyStatus();
+}
+
+function toggleDonate(){
+  const box = document.getElementById("donateBox");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+
+async function copyWallet(){
+  try{
+    await navigator.clipboard.writeText("0x63013226D82d1070eC98fBA2b3fdD6E626e9E8f6");
+    const el = document.getElementById("walletCopyStatus");
+    el.innerHTML = `<span class="ok">✅</span>`;
+    setTimeout(()=>{ el.innerHTML = ""; }, 2000);
+  }catch{}
+}
+
+const TIMEFRAMES_ALL = [
+  {key:"30m",  label:"30M",  interval:"30min"},
+  {key:"1h",   label:"1H",   interval:"1h"},
+  {key:"4h",   label:"4H",   interval:"4h"},
+  {key:"1day", label:"Daily", interval:"1day"}
+];
+const TIMEFRAMES_HIGHER = [
+  {key:"4h",   label:"4H",   interval:"4h"},
+  {key:"1day", label:"Daily", interval:"1day"}
+];
+const DIVERGENCE_TFS = ["4h", "1day"];
+const TF_WEIGHT = { "30m": 0.6, "1h": 0.8, "4h": 1.3, "1day": 1.6 };
+
+let TIMEFRAMES = TIMEFRAMES_ALL;
+let allData = {};
+let activeCandles = {};
+let lastUpdate = null;
+let higherOnlyMode = false;
+
+function fmt(x, d=2){
+  if(x==null || Number.isNaN(x)) return "-";
+  return Number(x).toFixed(d);
+}
+function pctDist(price, level){
+  if(price==null || level==null || level===0) return null;
+  return ((price - level) / level) * 100;
+}
+
+function getLocalParts(timeZone){
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone, weekday:'short', hour:'numeric', minute:'numeric', hour12:false
+  }).formatToParts(new Date());
+  const get = t => parts.find(p=>p.type===t)?.value;
+  const wd = get('weekday');
+  let h = parseInt(get('hour'),10);
+  if (h === 24) h = 0;
+  const m = parseInt(get('minute'),10);
+  return {wd, h, m, minutes: h*60 + m};
+}
+
+/* ✅ v7.2: دو نسخه — یکی ترجمه‌شده برای UI، یکی انگلیسی برای AI */
+function getGoldSessionRaw(){
+  const now = new Date();
+  const day = now.getUTCDay();
+  const uh = now.getUTCHours();
+  if (day === 6) return { nameKey:"sessionClosed", name:"Weekend Closed", cls:"off" };
+  if (day === 0 && uh < 22) return { nameKey:"sessionClosed", name:"Weekend Closed", cls:"off" };
+  if (day === 5 && uh >= 21) return { nameKey:"sessionClosed", name:"Weekend Closed", cls:"off" };
+  const london = getLocalParts('Europe/London');
+  const ny     = getLocalParts('America/New_York');
+  const asiaM  = uh * 60 + now.getUTCMinutes();
+  const londonOpen = london.minutes >= 7*60 && london.minutes < 16*60;
+  const nyOpen     = ny.minutes >= 8*60 && ny.minutes < 17*60;
+  const asiaOpen   = asiaM >= 0 && asiaM < 7*60;
+  if (londonOpen && nyOpen)  return { nameKey:"sessionLondonNY", name:"London + NY Overlap", cls:"ny" };
+  if (londonOpen)            return { nameKey:"sessionLondon",   name:"London",             cls:"london" };
+  if (nyOpen)                return { nameKey:"sessionNY",       name:"New York",           cls:"ny" };
+  if (asiaOpen)              return { nameKey:"sessionAsia",     name:"Asia",               cls:"asia" };
+  return { nameKey:"sessionLowVol", name:"Low Volume / Closed", cls:"off" };
+}
+
+function getGoldSession(){
+  const raw = getGoldSessionRaw();
+  return { name: t(raw.nameKey), cls: raw.cls };
+}
+
+function updateSessionBadge(){
+  const s = getGoldSession();
+  const el = document.getElementById("sessionBadge");
+  el.textContent = "Session: " + s.name;
+  el.className = "session " + s.cls;
+}
+
+function ema(values, n){
+  if(values.length < n) return null;
+  let e = values.slice(0,n).reduce((a,b)=>a+b,0)/n;
+  const k = 2/(n+1);
+  for(let i=n; i<values.length; i++) e = values[i]*k + e*(1-k);
+  return e;
+}
+
+function rsiSeries(values, n=14){
+  const out = new Array(values.length).fill(null);
+  if(values.length < n+1) return out;
+  let g=0, l=0;
+  for(let i=1; i<=n; i++){
+    const d = values[i]-values[i-1];
+    if(d>=0) g+=d; else l-=d;
+  }
+  let ag=g/n, al=l/n;
+  out[n] = al===0 ? 100 : 100 - (100/(1+ag/al));
+  for(let i=n+1; i<values.length; i++){
+    const d = values[i]-values[i-1];
+    ag = (ag*(n-1) + (d>0?d:0))/n;
+    al = (al*(n-1) + (d<0?-d:0))/n;
+    out[i] = al===0 ? 100 : 100 - (100/(1+ag/al));
+  }
+  return out;
+}
+
+function rsi(values, n=14){
+  const s = rsiSeries(values, n);
+  return s[s.length-1];
+}
+
+function atr(rows, n=14){
+  if(rows.length < n+1) return null;
+  const tr = [];
+  for(let i=0; i<rows.length; i++){
+    if(i===0) tr.push(rows[i].high-rows[i].low);
+    else tr.push(Math.max(rows[i].high-rows[i].low, Math.abs(rows[i].high-rows[i-1].close), Math.abs(rows[i].low-rows[i-1].close)));
+  }
+  let a = tr.slice(0,n).reduce((x,y)=>x+y,0)/n;
+  for(let i=n; i<tr.length; i++) a = (a*(n-1)+tr[i])/n;
+  return a;
+}
+
+function adx(rows, n=14){
+  if(rows.length < n*2) return null;
+  const plusDM=[], minusDM=[], tr=[];
+  for(let i=1; i<rows.length; i++){
+    const up = rows[i].high - rows[i-1].high;
+    const down = rows[i-1].low - rows[i].low;
+    plusDM.push(up > down && up > 0 ? up : 0);
+    minusDM.push(down > up && down > 0 ? down : 0);
+    tr.push(Math.max(rows[i].high-rows[i].low, Math.abs(rows[i].high-rows[i-1].close), Math.abs(rows[i].low-rows[i-1].close)));
+  }
+  let atrS = tr.slice(0,n).reduce((a,b)=>a+b,0);
+  let plusS = plusDM.slice(0,n).reduce((a,b)=>a+b,0);
+  let minusS = minusDM.slice(0,n).reduce((a,b)=>a+b,0);
+  const dx = [];
+  for(let i=n; i<tr.length; i++){
+    atrS = atrS - (atrS/n) + tr[i];
+    plusS = plusS - (plusS/n) + plusDM[i];
+    minusS = minusS - (minusS/n) + minusDM[i];
+    const pdi = 100 * (plusS / atrS);
+    const mdi = 100 * (minusS / atrS);
+    const d = Math.abs(pdi - mdi);
+    const s = pdi + mdi;
+    dx.push(s === 0 ? 0 : 100 * (d / s));
+  }
+  if(dx.length < n) return null;
+  let adxVal = dx.slice(0,n).reduce((a,b)=>a+b,0)/n;
+  for(let i=n; i<dx.length; i++) adxVal = ((adxVal*(n-1)) + dx[i])/n;
+  return adxVal;
+}
+
+function macd(values, fast=12, slow=26, signal=9){
+  if(values.length < slow + signal) return {macd:null, signal:null, hist:null, cross:"?"};
+  const kf = 2/(fast+1), ks = 2/(slow+1);
+  const emaFast = new Array(values.length).fill(null);
+  const emaSlow = new Array(values.length).fill(null);
+  let f = values.slice(0,fast).reduce((a,b)=>a+b,0)/fast;
+  let s = values.slice(0,slow).reduce((a,b)=>a+b,0)/slow;
+  emaFast[fast-1] = f;
+  emaSlow[slow-1] = s;
+  for(let i=fast; i<values.length; i++){ f = values[i]*kf + f*(1-kf); emaFast[i] = f; }
+  for(let i=slow; i<values.length; i++){ s = values[i]*ks + s*(1-ks); emaSlow[i] = s; }
+  const macdLine = new Array(values.length).fill(null);
+  for(let i=0; i<values.length; i++){
+    if(emaFast[i]!=null && emaSlow[i]!=null) macdLine[i] = emaFast[i] - emaSlow[i];
+  }
+  const firstIdx = macdLine.findIndex(x=>x!=null);
+  if(firstIdx === -1) return {macd:null, signal:null, hist:null, cross:"?"};
+  const validMacd = macdLine.slice(firstIdx);
+  if(validMacd.length < signal) return {macd:null, signal:null, hist:null, cross:"?"};
+  const signalArr = new Array(values.length).fill(null);
+  const ksig = 2/(signal+1);
+  let sig = validMacd.slice(0,signal).reduce((a,b)=>a+b,0)/signal;
+  signalArr[firstIdx + signal - 1] = sig;
+  for(let i=signal; i<validMacd.length; i++){
+    sig = validMacd[i]*ksig + sig*(1-ksig);
+    signalArr[firstIdx + i] = sig;
+  }
+  const lastM = macdLine[macdLine.length-1];
+  const lastS = signalArr[signalArr.length-1];
+  const prevM = macdLine[macdLine.length-2];
+  const prevS = signalArr[signalArr.length-2];
+  let cross = "?";
+  if(lastM!=null && lastS!=null && prevM!=null && prevS!=null){
+    if(prevM <= prevS && lastM > lastS) cross = "Bullish Cross";
+    else if(prevM >= prevS && lastM < lastS) cross = "Bearish Cross";
+    else if(lastM > lastS) cross = "Bullish";
+    else cross = "Bearish";
+  }
+  const hist = (lastM!=null && lastS!=null) ? lastM - lastS : null;
+  return {macd:lastM, signal:lastS, hist, cross};
+}
+
+function ichimoku(rows){
+  if(rows.length < 78) return {tenkan:null,kijun:null,spanA:null,spanB:null,futureA:null,futureB:null};
+  const mid = (s) => {
+    if(!s || s.length === 0) return null;
+    let hi = -Infinity, lo = Infinity;
+    for(const x of s){ if(x.high > hi) hi = x.high; if(x.low < lo) lo = x.low; }
+    return (hi + lo) / 2;
+  };
+  const i = rows.length - 1;
+  const tenkan = mid(rows.slice(i - 8, i + 1));
+  const kijun  = mid(rows.slice(i - 25, i + 1));
+  const futureA = (tenkan != null && kijun != null) ? (tenkan + kijun) / 2 : null;
+  const futureB = mid(rows.slice(i - 51, i + 1));
+  let spanA = null, spanB = null;
+  const cIdx = i - 26;
+  if(cIdx >= 51){
+    const t = mid(rows.slice(cIdx - 8, cIdx + 1));
+    const k = mid(rows.slice(cIdx - 25, cIdx + 1));
+    spanA = (t != null && k != null) ? (t + k) / 2 : null;
+    spanB = mid(rows.slice(cIdx - 51, cIdx + 1));
+  }
+  return {tenkan, kijun, spanA, spanB, futureA, futureB};
+}
+
+function structure(rows, pivot=3){
+  const highs=[], lows=[];
+  for(let i=pivot; i<rows.length-pivot; i++){
+    let isH=true, isL=true;
+    for(let j=1;j<=pivot;j++){
+      if(rows[i].high < rows[i-j].high || rows[i].high <= rows[i+j].high) isH=false;
+      if(rows[i].low  > rows[i-j].low  || rows[i].low  >= rows[i+j].low)  isL=false;
+    }
+    if(isH) highs.push({price:rows[i].high, dt:rows[i].datetime, idx:i});
+    if(isL) lows.push({price:rows[i].low,  dt:rows[i].datetime, idx:i});
+  }
+  const lh = highs[highs.length-1], ph = highs[highs.length-2];
+  const ll = lows[lows.length-1], pl = lows[lows.length-2];
+  let hs="?", ls="?", st="?";
+  if(lh && ph) hs = lh.price > ph.price ? "HH" : "LH";
+  if(ll && pl) ls = ll.price > pl.price ? "HL" : "LL";
+  if(hs==="HH" && ls==="HL") st="bullish";
+  else if(hs==="LH" && ls==="LL") st="bearish";
+  else if(hs!=="?" && ls!=="?") st="range";
+  const recentHigh = highs.length ? Math.max(...highs.slice(-3).map(x=>x.price)) : Math.max(...rows.slice(-20).map(x=>x.high));
+  const recentLow  = lows.length  ? Math.min(...lows.slice(-3).map(x=>x.price))  : Math.min(...rows.slice(-20).map(x=>x.low));
+  return {
+    structureKey: st, highState: hs, lowState: ls,
+    lastHigh: lh, lastLow: ll,
+    recentHigh, recentLow,
+    allHighs: highs.slice(-5),
+    allLows: lows.slice(-5)
+  };
+}
+
+function structureLabel(key){
+  if(key === "bullish") return t("bullish");
+  if(key === "bearish") return t("bearish");
+  if(key === "range") return t("range");
+  return "?";
+}
+
+function cloudStatus(price, a, b){
+  if(price==null || a==null || b==null) return {key:"?", label:"?"};
+  const top=Math.max(a,b), bot=Math.min(a,b);
+  if(price>top) return {key:"above", label:t("aboveCloud")};
+  if(price<bot) return {key:"below", label:t("belowCloud")};
+  return {key:"inside", label:t("insideCloud")};
+}
+
+function fibLevels(high, low){
+  if(high==null || low==null || high<=low) return null;
+  const diff = high - low;
+  return {
+    high, low,
+    "0.0": high,
+    "0.236": high - diff*0.236,
+    "0.382": high - diff*0.382,
+    "0.5": high - diff*0.5,
+    "0.618": high - diff*0.618,
+    "0.786": high - diff*0.786,
+    "1.0": low
+  };
+}
+
+function detectDivergence(rows){
+  if(rows.length < 30) return null;
+  const closes = rows.map(x=>x.close);
+  const rsiArr = rsiSeries(closes, 14);
+  const st = structure(rows, 3);
+  const highs = (st.allHighs||[]);
+  const lows  = (st.allLows||[]);
+  let bearish = null, bullish = null;
+  if(highs.length >= 2){
+    const a = highs[highs.length-2];
+    const b = highs[highs.length-1];
+    if(b.price > a.price){
+      const rsiA = rsiArr[a.idx];
+      const rsiB = rsiArr[b.idx];
+      if(rsiA!=null && rsiB!=null && rsiB < rsiA - 1) bearish = {from:a, to:b, rsiA, rsiB};
+    }
+  }
+  if(lows.length >= 2){
+    const a = lows[lows.length-2];
+    const b = lows[lows.length-1];
+    if(b.price < a.price){
+      const rsiA = rsiArr[a.idx];
+      const rsiB = rsiArr[b.idx];
+      if(rsiA!=null && rsiB!=null && rsiB > rsiA + 1) bullish = {from:a, to:b, rsiA, rsiB};
+    }
+  }
+  return {bearish, bullish};
+}
+
+function findCommonLevels(){
+  if(!allData["4h"] || !allData["1day"]) return {
+    supports:[], resistances:[],
+    nearestSupports:[], nearestResistances:[],
+    strongestSupports:[], strongestResistances:[],
+    price:null, atr4h:null
+  };
+  const s4 = structure(allData["4h"]);
+  const sD = structure(allData["1day"]);
+  const price = activeCandles["4h"] ? activeCandles["4h"].close : allData["4h"].at(-1).close;
+  const atr4h = atr(allData["4h"]);
+  const candidates = [];
+  const add = (p,type,source,score) => {
+    if(p==null || !Number.isFinite(p)) return;
+    if(type==="S" && p>=price) return;
+    if(type==="R" && p<=price) return;
+    candidates.push({price:p,type,source,score});
+  };
+  (sD.allHighs||[]).forEach(x=>add(x.price,"R","Daily Swing High",30));
+  (sD.allLows||[]).forEach(x=>add(x.price,"S","Daily Swing Low",30));
+  (s4.allHighs||[]).forEach(x=>add(x.price,"R","4H Swing High",22));
+  (s4.allLows||[]).forEach(x=>add(x.price,"S","4H Swing Low",22));
+  add(sD.recentHigh,"R","Daily 20-candle High",14);
+  add(sD.recentLow,"S","Daily 20-candle Low",14);
+  add(s4.recentHigh,"R","4H 20-candle High",10);
+  add(s4.recentLow,"S","4H 20-candle Low",10);
+  const dSnap = snap(allData["1day"], activeCandles["1day"]);
+  if(dSnap.fib){
+    ["0.382","0.5","0.618","0.786"].forEach(k=>{
+      const p=dSnap.fib[k];
+      add(p,p<price?"S":"R",`Daily Fib ${k}`,12);
+    });
+  }
+  if(dSnap.ichi?.kijun!=null) add(dSnap.ichi.kijun,dSnap.ichi.kijun<price?"S":"R","Daily Kijun",12);
+  if(dSnap.top!=null) add(dSnap.top,dSnap.top<price?"S":"R","Daily Cloud Top",10);
+  if(dSnap.bot!=null) add(dSnap.bot,dSnap.bot<price?"S":"R","Daily Cloud Bottom",10);
+
+  candidates.sort((a,b)=>a.price-b.price);
+  const clusterTolerance = Math.max(price*0.0012, 1.0);
+  const zones = [];
+  for(const c of candidates){
+    let z = zones.find(x => x.type===c.type && Math.abs(x.price-c.price)<=clusterTolerance);
+    if(!z){
+      z={price:c.price,type:c.type,score:0,count:0,sources:[],rawPrices:[]};
+      zones.push(z);
+    }
+    z.price = (z.price*z.count+c.price)/(z.count+1);
+    z.score += c.score;
+    z.count++;
+    z.rawPrices.push(c.price);
+    if(!z.sources.includes(c.source)) z.sources.push(c.source);
+  }
+  const sourceWeight = source => {
+    if(source === "Daily Swing High" || source === "Daily Swing Low") return 40;
+    if(source === "4H Swing High" || source === "4H Swing Low") return 28;
+    if(source === "Daily 20-candle High" || source === "Daily 20-candle Low") return 18;
+    if(source === "4H 20-candle High" || source === "4H 20-candle Low") return 14;
+    if(source.startsWith("Daily Fib ")) return 12;
+    if(source === "Daily Kijun") return 12;
+    if(source === "Daily Cloud Top" || source === "Daily Cloud Bottom") return 10;
+    return 8;
+  };
+  zones.forEach(z=>{
+    const independent = z.sources.length;
+    const hasDaily = z.sources.some(s=>s.startsWith("Daily "));
+    const has4H = z.sources.some(s=>s.startsWith("4H "));
+    const hasSwing = z.sources.some(s=>s.includes("Swing"));
+    const anchor = Math.max(...z.sources.map(sourceWeight));
+    const confluenceBonus = Math.min(15, Math.max(0, independent-1)*4 + (independent>1 ? 3 : 0));
+    const crossTfBonus = (hasDaily && has4H) ? 8 : 0;
+    const repeatBonus = Math.min(8, Math.max(0, z.count-1)*2);
+    const structuralBonus = hasSwing ? 4 : 0;
+    z.rawScore = anchor + confluenceBonus + crossTfBonus + repeatBonus + structuralBonus;
+    z.strengthScore = Math.min(100, Math.round(z.rawScore*10)/10);
+    z.score = z.strengthScore;
+    z.anchorSource = z.sources.slice().sort((a,b)=>sourceWeight(b)-sourceWeight(a))[0];
+  });
+  const zoneMergeDistance = Math.max(price*0.0025, 2.5);
+  const zonePadding = Math.max(price*0.00035, 0.5);
+  const atrRef = atr4h != null ? atr4h : 30;
+  const buildZones = arr => {
+    const remaining = [...arr].sort((a,b)=> b.score-a.score || Math.abs(a.price-price)-Math.abs(b.price-price));
+    const result = [];
+    while(remaining.length && result.length<10){
+      const anchor = remaining.shift();
+      const absorbed = [anchor];
+      for(let i=remaining.length-1;i>=0;i--){
+        if(Math.abs(remaining[i].price-anchor.price)<=zoneMergeDistance){
+          absorbed.push(remaining[i]);
+          remaining.splice(i,1);
+        }
+      }
+      const raw = absorbed.flatMap(x=>x.rawPrices);
+      const low = Math.min(...raw, anchor.price) - zonePadding;
+      const high = Math.max(...raw, anchor.price) + zonePadding;
+      const evidenceSources = [...new Set(absorbed.flatMap(x=>x.sources))];
+      const evidenceCount = absorbed.reduce((sum,x)=>sum+x.count,0);
+      const evidenceBonus = Math.min(10, Math.max(0, absorbed.length-1)*3);
+      const strengthScore = Math.min(100, Math.round((anchor.strengthScore + evidenceBonus)*10)/10);
+      if(strengthScore < 25) continue;
+      const anchorPrice = anchor.price;
+      const distance = Math.abs(price - anchorPrice);
+      const ratio = distance / atrRef;
+      const proximityScore = Math.max(0, Math.round((100 - ratio * 30) * 10) / 10);
+      const finalScore = Math.round((strengthScore * 0.6 + proximityScore * 0.4) * 10) / 10;
+      result.push({
+        ...anchor, price:anchorPrice, anchorPrice,
+        anchorSource:anchor.anchorSource, strengthScore, proximityScore, finalScore,
+        score:finalScore,
+        distance: Math.round(distance*100)/100,
+        atrRatio: Math.round(ratio*100)/100,
+        zoneLow:low, zoneHigh:high,
+        sources:evidenceSources,
+        evidenceZones:absorbed.length,
+        evidenceCount
+      });
+    }
+    return result;
+  };
+  const allSupports = buildZones(zones.filter(x=>x.type==="S" && x.price<price));
+  const allResistances = buildZones(zones.filter(x=>x.type==="R" && x.price>price));
+  const nearestSupports = [...allSupports].sort((a,b)=>a.distance - b.distance).slice(0,4);
+  const nearestResistances = [...allResistances].sort((a,b)=>a.distance - b.distance).slice(0,4);
+  const strongestSupports = [...allSupports].sort((a,b)=>b.strengthScore - a.strengthScore).slice(0,4);
+  const strongestResistances = [...allResistances].sort((a,b)=>b.strengthScore - a.strengthScore).slice(0,4);
+  const supports = [...allSupports].sort((a,b)=>b.finalScore - a.finalScore).slice(0,5);
+  const resistances = [...allResistances].sort((a,b)=>b.finalScore - a.finalScore).slice(0,5);
+  return {
+    supports, resistances,
+    nearestSupports, nearestResistances,
+    strongestSupports, strongestResistances,
+    price, atr4h
+  };
+}
+
+function calcSessionHL(){
+  const rows = allData["30m"] || allData["1h"] || allData["4h"];
+  if(!rows || rows.length < 4) return null;
+  const today = new Date();
+  const y = today.getUTCFullYear(), m = today.getUTCMonth(), d = today.getUTCDate();
+  const dayStartUTC = Date.UTC(y, m, d, 0, 0, 0);
+  const inWindow = (row, startH, endH) => {
+    const t = new Date(row.datetime).getTime();
+    if (t < dayStartUTC) return false;
+    const hours = (t - dayStartUTC) / 3600000;
+    return hours >= startH && hours < endH;
+  };
+  const pick = (startH, endH) => {
+    const subset = rows.filter(r => inWindow(r, startH, endH));
+    if (!subset.length) return null;
+    return { high: Math.max(...subset.map(r=>r.high)), low: Math.min(...subset.map(r=>r.low)) };
+  };
+  return { asia: pick(0, 7), london: pick(7, 16), ny: pick(13, 21) };
+}
+
+function snap(rows, active){
+  const c = rows.map(x=>x.close);
+  const last = rows[rows.length-1];
+  const ichi = ichimoku(rows);
+  const e20 = ema(c,20), e50 = ema(c,50);
+  const r = rsi(c), a = atr(rows);
+  const adxVal = adx(rows);
+  const macdVal = macd(c);
+  const st = structure(rows);
+  const trend = (e20 && e50) ? (e20>e50 ? "bullish" : "bearish") : "?";
+  const cloudClosed = cloudStatus(last.close, ichi.spanA, ichi.spanB);
+  const activePrice = active ? active.close : null;
+  const cloudNow = cloudStatus(activePrice, ichi.spanA, ichi.spanB);
+  const top = (ichi.spanA!=null && ichi.spanB!=null) ? Math.max(ichi.spanA,ichi.spanB) : null;
+  const bot = (ichi.spanA!=null && ichi.spanB!=null) ? Math.min(ichi.spanA,ichi.spanB) : null;
+  const distE20 = pctDist(activePrice, e20);
+  const distE50 = pctDist(activePrice, e50);
+  let fib = null;
+  if(st.lastHigh && st.lastLow){
+    const hi = Math.max(st.lastHigh.price, st.recentHigh);
+    const lo = Math.min(st.lastLow.price, st.recentLow);
+    fib = fibLevels(hi, lo);
+  }
+  return {
+    last, e20, e50, r, a, adx:adxVal, macd:macdVal, ichi, trend, st,
+    cloudClosed, cloudNow, activePrice, top, bot, active,
+    distE20, distE50, fib
+  };
+}
+
+function render(key, label){
+  const s = snap(allData[key], activeCandles[key]);
+  const tClass = s.trend==="bullish"?"up":s.trend==="bearish"?"down":"neutral";
+  const tLabel = t(s.trend) || "?";
+  const cClass = s.cloudNow.key==="above"?"up":s.cloudNow.key==="below"?"down":"neutral";
+  const adxClass = s.adx!=null ? (s.adx>=25?"up":s.adx>=20?"neutral":"down") : "neutral";
+  const macdClass = s.macd.cross.includes("Bull")?"up":s.macd.cross.includes("Bear")?"down":"neutral";
+
+  let divHtml = "";
+  if (DIVERGENCE_TFS.includes(key)) {
+    const div = detectDivergence(allData[key]);
+    if (div && div.bearish) divHtml += `<div class="divergence">⚠ Bearish Divergence (RSI)</div> `;
+    if (div && div.bullish) divHtml += `<div class="divergence">⚠ Bullish Divergence (RSI)</div>`;
+  }
+
+  return `<div class="box">
+    <b>${label}</b>
+    <div class="small">${t("lastClose")}: ${s.last.datetime} | C: <b>${fmt(s.last.close)}</b></div>
+    <div class="small">${t("refPrice")}: ${s.active ? fmt(s.active.close) : "-"}</div>
+    <hr>
+    <div>${t("trend")}: <span class="tag ${tClass}">${tLabel}</span> | RSI: <b>${fmt(s.r,1)}</b></div>
+    <div>ADX: <span class="tag ${adxClass}">${fmt(s.adx,1)}</span></div>
+    <div>MACD: <span class="tag ${macdClass}">${s.macd.cross}</span> | Hist: ${fmt(s.macd.hist,3)}</div>
+    <div class="small">${t("distEMA")}: ${fmt(s.distE20,2)}% / ${fmt(s.distE50,2)}%</div>
+    <div>${t("ichimokuNow")}: <span class="tag ${cClass}">${s.cloudNow.label}</span></div>
+    <div class="small">${t("distCloud")}: ${fmt(s.activePrice-s.top)} / ${fmt(s.activePrice-s.bot)}</div>
+    <div>${t("structure")}: <b>${structureLabel(s.st.structureKey)}</b> (${s.st.highState}/${s.st.lowState})</div>
+    <div class="small">${t("swingHL")}: ${s.st.lastHigh?fmt(s.st.lastHigh.price):"-"} / ${s.st.lastLow?fmt(s.st.lastLow.price):"-"}</div>
+    <div class="small">ATR: ${fmt(s.a)}</div>
+    ${divHtml}
+  </div>`;
+}
+
+function calcConfluence(){
+  const tfs = TIMEFRAMES.filter(tf => allData[tf.key]);
+  if(tfs.length === 0) return {bias:"?", conf:0, summary:"No data", details:[], bull:0, bear:0, range:0, totalWeight:0};
+  let bullScore = 0, bearScore = 0, rangeScore = 0;
+  const details = [];
+  const adxCache = {};
+  for(const tf of tfs){
+    const s = snap(allData[tf.key], activeCandles[tf.key]);
+    adxCache[tf.key] = s.adx;
+    const w = TF_WEIGHT[tf.key] || 1.0;
+    let score = 0;
+    if(s.trend === "bullish") score++;
+    if(s.trend === "bearish") score--;
+    if(s.st.structureKey === "bullish") score++;
+    if(s.st.structureKey === "bearish") score--;
+    if(s.cloudNow.key === "above") score++;
+    if(s.cloudNow.key === "below") score--;
+    if(s.macd.cross.includes("Bull")) score += 0.5;
+    if(s.macd.cross.includes("Bear")) score -= 0.5;
+    if(s.adx != null && s.adx >= 25) score *= 1.2;
+    let dir = "range", contribution = 0, contribLabel = "";
+    if(score > 0.8){ contribution = score * w; bullScore += contribution; dir = "bullish"; contribLabel = "+" + fmt(contribution, 2); }
+    else if(score < -0.8){ contribution = score * w; bearScore += Math.abs(contribution); dir = "bearish"; contribLabel = fmt(contribution, 2); }
+    else { contribution = w; rangeScore += contribution; dir = "range"; contribLabel = "range:" + fmt(w, 2); }
+    details.push({
+      tf: tf.label, dir, dirLabel: t(dir),
+      rawScore: fmt(score,2), weight: w,
+      contribution, contribLabel, adx: fmt(s.adx,1)
+    });
+  }
+  const total = bullScore + bearScore + rangeScore;
+  let bias = "range";
+  if(bullScore > bearScore && bullScore > rangeScore) bias = "bullish";
+  else if(bearScore > bullScore && bearScore > rangeScore) bias = "bearish";
+  const dominant = Math.max(bullScore, bearScore, rangeScore);
+  let conf = Math.round((dominant / total) * 70);
+  let adxBoost = 0;
+  const a4 = adxCache["4h"], aD = adxCache["1day"];
+  if(a4 != null){ if(a4 >= 25) adxBoost += 5; else if(a4 >= 20) adxBoost += 2; }
+  if(aD != null){ if(aD >= 25) adxBoost += 5; else if(aD >= 20) adxBoost += 3; }
+  adxBoost = Math.min(10, adxBoost);
+  conf = Math.min(90, conf + adxBoost);
+  const summaryParts = details.map(d => `${d.tf}:${d.dirLabel}(${d.contribLabel})`).join(" | ");
+  return {
+    bias, biasLabel: t(bias), conf, summary: summaryParts, details,
+    bull: Math.round(bullScore*100)/100,
+    bear: Math.round(bearScore*100)/100,
+    range: Math.round(rangeScore*100)/100,
+    totalWeight: Math.round(total*100)/100,
+    adxBoost
+  };
+}
+
+/* ✅ v7.2: استفاده از getGoldSessionRaw() — انگلیسی خالص برای AI */
+function makeOutput(){
+  const session = getGoldSessionRaw();
+  let out = "XAUUSD QUICK MULTI-TF DATA (v7.2)\n";
+  out += "Time: " + (lastUpdate ? lastUpdate.toISOString() : new Date().toISOString()) + "\n";
+  out += "Session: " + session.name + "\n";
+  out += "Mode: " + (higherOnlyMode ? "Higher TF only (4H+Daily)" : "All TF") + "\n";
+  out += "Weights: 30M=0.6 | 1H=0.8 | 4H=1.3 | Daily=1.6\n";
+  out += "S/R Final Score: 60% Strength + 40% Proximity\n";
+  out += "Proximity formula: 100 - (distance / ATR4H) × 30 (cut at 0)\n";
+  out += "NEAR threshold: 1.0 × ATR(4H)\n";
+  out += "User Language: " + getLangName() + "\n\n";
+
+  const conf = calcConfluence();
+  out += `=== CONFLUENCE (Weighted by Intensity) ===\n`;
+  out += `Bias: ${conf.bias} | Confidence: ${conf.conf}%\n`;
+  out += `Alignment: ${conf.summary}\n`;
+  out += `Bull W: ${conf.bull} | Bear W: ${conf.bear} | Range W: ${conf.range} | Total: ${conf.totalWeight}\n\n`;
+
+  const shl = calcSessionHL();
+  if(shl){
+    out += `=== SESSION HIGH/LOW (today, UTC) ===\n`;
+    const row = (name, v) => v ? `${name}: H=${fmt(v.high)} | L=${fmt(v.low)}\n` : `${name}: N/A\n`;
+    out += row("Asia (00-07 UTC)", shl.asia);
+    out += row("London (07-16 UTC)", shl.london);
+    out += row("NY (13-21 UTC)", shl.ny);
+    out += `\n`;
+  }
+
+  for(const tf of TIMEFRAMES){
+    if(!allData[tf.key]) continue;
+    const s = snap(allData[tf.key], activeCandles[tf.key]);
+    out += `[${tf.label}]\n`;
+    out += `Ref price: ${fmt(s.activePrice)} | Last close: ${fmt(s.last.close)} (${s.last.datetime})\n`;
+    out += `Trend EMA20/50: ${s.trend} | Dist EMA20/50: ${fmt(s.distE20,2)}% / ${fmt(s.distE50,2)}%\n`;
+    out += `RSI: ${fmt(s.r,1)} | ATR: ${fmt(s.a)} | ADX: ${fmt(s.adx,1)}\n`;
+    out += `MACD: ${s.macd.cross} | Hist: ${fmt(s.macd.hist,3)}\n`;
+    out += `Ichimoku now: ${s.cloudNow.key} | Closed: ${s.cloudClosed.key}\n`;
+    out += `Dist to Cloud Top/Bottom: ${fmt(s.activePrice - s.top)} / ${fmt(s.activePrice - s.bot)}\n`;
+    out += `Structure: ${s.st.structureKey} (${s.st.highState}/${s.st.lowState})\n`;
+    out += `Last Swing H/L: ${s.st.lastHigh?fmt(s.st.lastHigh.price):"-"} / ${s.st.lastLow?fmt(s.st.lastLow.price):"-"}\n`;
+    out += `Recent H/L: ${fmt(s.st.recentHigh)} / ${fmt(s.st.recentLow)}\n`;
+    out += `Tenkan/Kijun: ${fmt(s.ichi.tenkan)} / ${fmt(s.ichi.kijun)}\n`;
+    out += `Cloud CURRENT A/B: ${fmt(s.ichi.spanA)} / ${fmt(s.ichi.spanB)}\n`;
+    out += `Cloud FUTURE A/B: ${fmt(s.ichi.futureA)} / ${fmt(s.ichi.futureB)}\n`;
+    if (DIVERGENCE_TFS.includes(tf.key)) {
+      const div = detectDivergence(allData[tf.key]);
+      if (div && div.bearish) out += `Bearish Divergence: High ${fmt(div.bearish.from.price)}->${fmt(div.bearish.to.price)} but RSI ${fmt(div.bearish.rsiA,1)}->${fmt(div.bearish.rsiB,1)}\n`;
+      if (div && div.bullish) out += `Bullish Divergence: Low ${fmt(div.bullish.from.price)}->${fmt(div.bullish.to.price)} but RSI ${fmt(div.bullish.rsiA,1)}->${fmt(div.bullish.rsiB,1)}\n`;
+    }
+    if(s.fib){
+      out += `Fib: 0.0=${fmt(s.fib["0.0"])} | 0.382=${fmt(s.fib["0.382"])} | 0.5=${fmt(s.fib["0.5"])} | 0.618=${fmt(s.fib["0.618"])} | 1.0=${fmt(s.fib["1.0"])}\n`;
+    }
+    out += `\n`;
+  }
+
+  const L = findCommonLevels();
+  const price = L.price;
+  const atr4h = L.atr4h;
+  const nearThreshold = (atr4h != null) ? 1.0 * atr4h : null;
+  const nearFlag = (l) => {
+    if (nearThreshold == null || price == null) return "";
+    const dist = Math.min(Math.abs(price - l.zoneLow), Math.abs(price - l.zoneHigh));
+    return dist <= nearThreshold ? " [NEAR PRICE]" : "";
+  };
+  const fmtZoneLine = (prefix, l) => {
+    return `  ${prefix}. Zone ${fmt(l.zoneLow)}-${fmt(l.zoneHigh)} | Anchor: ${fmt(l.anchorPrice)} | Dist: ${fmt(l.distance)} (${fmt(l.atrRatio,2)}xATR) | Strength: ${l.strengthScore}/100 | Proximity: ${l.proximityScore}/100 | Final: ${l.finalScore}/100 | Evidence: ${l.sources.join(", ")}${nearFlag(l)}`;
+  };
+
+  out += `=== NEAREST SUPPORTS (closest to ${fmt(price)}) ===\n`;
+  L.nearestSupports.forEach((l,i) => out += fmtZoneLine(`S_near${i+1}`, l) + "\n");
+  out += `\n=== NEAREST RESISTANCES ===\n`;
+  L.nearestResistances.forEach((l,i) => out += fmtZoneLine(`R_near${i+1}`, l) + "\n");
+  out += `\n=== STRONGEST SUPPORTS ===\n`;
+  L.strongestSupports.forEach((l,i) => out += fmtZoneLine(`S_strong${i+1}`, l) + "\n");
+  out += `\n=== STRONGEST RESISTANCES ===\n`;
+  L.strongestResistances.forEach((l,i) => out += fmtZoneLine(`R_strong${i+1}`, l) + "\n");
+  out += `\n`;
+
+  if(allData["1day"]){
+    const sD = snap(allData["1day"], activeCandles["1day"]);
+    if(sD.fib){
+      out += `=== Daily Fibonacci ===\n`;
+      out += `High: ${fmt(sD.fib.high)} | Low: ${fmt(sD.fib.low)}\n`;
+      out += `0.236: ${fmt(sD.fib["0.236"])} | 0.382: ${fmt(sD.fib["0.382"])} | 0.5: ${fmt(sD.fib["0.5"])} | 0.618: ${fmt(sD.fib["0.618"])} | 0.786: ${fmt(sD.fib["0.786"])}\n\n`;
+    }
+  }
+
+  out += `=== AI INSTRUCTIONS ===\n`;
+  out += `⚠️ IMPORTANT: Respond in ${getLangName()}. All section content and explanations must be in ${getLangName()}.\n`;
+  out += `Section headings/labels stay in English, but the body text is in ${getLangName()}.\n\n`;
+  out += `Write a short, result-oriented response, plus one brief paragraph (3-5 sentences) explaining overall conditions.\n\n`;
+  out += `Response structure:\n`;
+  out += `1. Overall bias (Bullish/Bearish/Range) + confidence %\n`;
+  out += `2. Brief paragraph explaining conditions\n`;
+  out += `3. Nearest Supports — with Zone, Anchor, Dist, Final Score\n`;
+  out += `4. Nearest Resistances — with Zone, Anchor, Dist, Final Score\n`;
+  out += `5. Strongest Supports and Resistances — report separately\n`;
+  out += `6. Divergence (if any)\n`;
+  out += `7. Session High/Low today\n`;
+  out += `8. Entry conditions analytically only; do NOT issue buy/sell signals.\n`;
+  out += `9. Two scenarios with approximate probability; no Entry/SL/TP unless explicitly requested.\n\n`;
+  out += `⚠️ SECTION 10 (MANDATORY, ENGLISH ONLY): At the very end, output copy-ready numbers in EXACTLY this format. Do NOT translate this section:\n\n`;
+  out += `=== PINE SCRIPT INPUTS ===\n`;
+  out += `Strongest R: num, num, num, num\n`;
+  out += `Strongest S: num, num, num, num\n`;
+  out += `Nearest R: num, num, num, num\n`;
+  out += `Nearest S: num, num, num, num\n`;
+  out += `========================\n\n`;
+  out += `Rules for Section 10:\n`;
+  out += `- 2 decimal places (e.g. 4344.05)\n`;
+  out += `- Anchor values only\n`;
+  out += `- Descending order\n`;
+  out += `- Comma + single space between numbers\n`;
+
+  return out;
+}
+
+function renderLevels(){
+  const L = findCommonLevels();
+  const price = L.price;
+  const atr4h = L.atr4h;
+  const nearThreshold = (atr4h != null) ? 1.0 * atr4h : null;
+  const isNear = (l) => {
+    if (nearThreshold == null || price == null) return false;
+    const dist = Math.min(Math.abs(price - l.zoneLow), Math.abs(price - l.zoneHigh));
+    return dist <= nearThreshold;
+  };
+  const zoneRow = (l, i, prefix, cls) => {
+    const near = isNear(l);
+    return `<div style="margin:4px 0" class="${near?'zone-near':''}">${prefix}${i+1} — <b>Zone ${fmt(l.zoneLow)}–${fmt(l.zoneHigh)}</b> | Anchor ≈ ${fmt(l.anchorPrice)}
+      <span class="tag ${cls}">Final ${l.finalScore}</span>
+      <span class="tag neutral">S:${l.strengthScore} P:${l.proximityScore}</span>
+      <span class="small">Dist: ${fmt(l.distance)} (${fmt(l.atrRatio,2)}×ATR) | ${l.anchorSource}</span>
+      ${near?'<span class="tag up">⚠ NEAR</span>':''}</div>`;
+  };
+  let html = "";
+  if(price != null){
+    html += `<div style="margin-bottom:10px"><b>📍 Nearest Supports (${fmt(price)}):</b><br>`;
+    html += L.nearestSupports.map((l,i)=>zoneRow(l,i,"S_near","up")).join("") || "—";
+    html += `</div>`;
+    html += `<div style="margin-bottom:10px"><b>📍 Nearest Resistances:</b><br>`;
+    html += L.nearestResistances.map((l,i)=>zoneRow(l,i,"R_near","down")).join("") || "—";
+    html += `</div>`;
+    html += `<div style="margin-bottom:10px"><b>💪 Strongest Supports:</b><br>`;
+    html += L.strongestSupports.map((l,i)=>zoneRow(l,i,"S_strong","up")).join("") || "—";
+    html += `</div>`;
+    html += `<div><b>💪 Strongest Resistances:</b><br>`;
+    html += L.strongestResistances.map((l,i)=>zoneRow(l,i,"R_strong","down")).join("") || "—";
+    html += `</div>`;
+  } else {
+    html = "Load 4H and Daily data first.";
+  }
+  document.getElementById("levelsContent").innerHTML = html;
+  document.getElementById("levelsBox").style.display = "block";
+}
+
+function renderSessions(){
+  const shl = calcSessionHL();
+  const box = document.getElementById("sessionsBox");
+  const el = document.getElementById("sessionsContent");
+  if(!shl){ box.style.display = "none"; return; }
+  const row = (name, v, cls) => v
+    ? `<div style="margin:4px 0"><span class="session ${cls}">${name}</span> H=<b>${fmt(v.high)}</b> | L=<b>${fmt(v.low)}</b></div>`
+    : `<div style="margin:4px 0"><span class="session ${cls}">${name}</span> N/A</div>`;
+  el.innerHTML =
+    row(t("sessionAsia"), shl.asia, "asia") +
+    row(t("sessionLondon"), shl.london, "london") +
+    row(t("sessionNY"), shl.ny, "ny");
+  box.style.display = "block";
+}
+
+function renderDivergence(){
+  const box = document.getElementById("divergenceBox");
+  const el = document.getElementById("divergenceContent");
+  let html = "";
+  for (const key of DIVERGENCE_TFS) {
+    if (!allData[key]) continue;
+    const tfLabel = TIMEFRAMES.find(t=>t.key===key)?.label || key;
+    const div = detectDivergence(allData[key]);
+    if (!div || (!div.bearish && !div.bullish)) continue;
+    html += `<div style="margin:6px 0"><b>${tfLabel}:</b> `;
+    if (div.bearish) html += `<span class="divergence">Bearish — High ${fmt(div.bearish.from.price)}→${fmt(div.bearish.to.price)} | RSI ${fmt(div.bearish.rsiA,1)}→${fmt(div.bearish.rsiB,1)}</span> `;
+    if (div.bullish) html += `<span class="divergence">Bullish — Low ${fmt(div.bullish.from.price)}→${fmt(div.bullish.to.price)} | RSI ${fmt(div.bullish.rsiA,1)}→${fmt(div.bullish.rsiB,1)}</span>`;
+    html += `</div>`;
+  }
+  if (!html) html = `<div class="small">No active Divergence on 4H or Daily.</div>`;
+  el.innerHTML = html;
+  box.style.display = "block";
+}
+
+function renderAllSections(){
+  document.getElementById("cards").innerHTML = TIMEFRAMES.map(tf => {
+    if(!allData[tf.key]) return "";
+    return render(tf.key, tf.label);
+  }).join("");
+  renderSessions();
+  renderLevels();
+  renderDivergence();
+}
+
+function filterWeekend(rows){
+  return rows.filter(r => {
+    const d = new Date(r.datetime.replace(" ", "T") + "Z");
+    if (isNaN(d.getTime())) return true;
+    const day = d.getUTCDay();
+    const h = d.getUTCHours();
+    if (day === 6) return false;
+    if (day === 0 && h < 22) return false;
+    if (day === 5 && h >= 21) return false;
+    return true;
+  });
+}
+
+async function fetchCandles(interval, key, retries=2){
+  if(!API_KEY) throw new Error("API Key not set.");
+  const url = `https://api.twelvedata.com/time_series?symbol=XAU/USD&exchange=OANDA&interval=${interval}&outputsize=300&apikey=${encodeURIComponent(API_KEY)}`;
+  for(let attempt=0; attempt<=retries; attempt++){
+    try{
+      const r = await fetch(url);
+      const j = await r.json();
+      if(j.status === "error" || !j.values){
+        if(j.code === 429 || (j.message && j.message.toLowerCase().includes("limit"))){
+          if(attempt < retries){ await new Promise(res => setTimeout(res, 1200 * (attempt+1))); continue; }
+        }
+        throw new Error(j.message || "Error fetching data");
+      }
+      let rows = j.values.map(x => ({
+        datetime: x.datetime, open: +x.open, high: +x.high, low: +x.low, close: +x.close, volume: x.volume != null ? +x.volume : null
+      })).sort((a,b) => new Date(a.datetime) - new Date(b.datetime));
+      rows = filterWeekend(rows);
+      const active = rows.pop() || null;
+      activeCandles[key] = active;
+      allData[key] = rows.slice(-200);
+      return;
+    }catch(e){
+      if(attempt === retries) throw e;
+      await new Promise(res => setTimeout(res, 1000 * (attempt+1)));
+    }
+  }
+}
+
+async function loadData(tfs){
+  const status = document.getElementById("status");
+  if(!API_KEY){
+    status.innerHTML = `<span class="warn">${t("statusNoKey")}</span>`;
+    return;
+  }
+  status.textContent = t("statusFetching");
+  updateSessionBadge();
+  try{
+    for(const tf of tfs){
+      status.textContent = t("statusFetchingTF", {tf: tf.label});
+      await fetchCandles(tf.interval, tf.key);
+      await new Promise(r => setTimeout(r, 350));
+    }
+    lastUpdate = new Date();
+    renderAllSections();
+    document.getElementById("output").textContent = makeOutput();
+    const conf = calcConfluence();
+    status.innerHTML = `<span class="ok">${t("statusLoaded")}</span> — ${lastUpdate.toLocaleTimeString()}<br>
+      <span class="info">Bias: ${conf.biasLabel} (${conf.conf}%)</span>`;
+  }catch(e){
+    status.innerHTML = `<span class="warn">❌ ${e.message}</span>`;
+  }
+}
+
+async function loadAll(){
+  higherOnlyMode = false;
+  TIMEFRAMES = TIMEFRAMES_ALL;
+  allData = {}; activeCandles = {};
+  await loadData(TIMEFRAMES_ALL);
+}
+
+async function loadHigherOnly(){
+  higherOnlyMode = true;
+  TIMEFRAMES = TIMEFRAMES_HIGHER;
+  allData = {}; activeCandles = {};
+  await loadData(TIMEFRAMES_HIGHER);
+}
+
+async function copyOutput(){
+  const text = document.getElementById("output").textContent;
+  try{
+    await navigator.clipboard.writeText(text);
+    document.getElementById("status").innerHTML = `<span class="ok">${t("statusCopiedAI")}</span>`;
+  }catch{
+    const pre = document.getElementById("output");
+    const range = document.createRange();
+    range.selectNodeContents(pre);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.getElementById("status").textContent = t("statusCopyFail");
+  }
+}
+
+async function copyForTradingView(){
+  const L = findCommonLevels();
+  if(!L.price){
+    document.getElementById("status").textContent = "❌ Load data first.";
+    return;
+  }
+  const fmtList = (arr) => arr.map(l => fmt(l.anchorPrice)).join(", ");
+  const strongestR = fmtList(L.strongestResistances);
+  const strongestS = fmtList(L.strongestSupports);
+  const nearestR   = fmtList(L.nearestResistances);
+  const nearestS   = fmtList(L.nearestSupports);
+  const text =
+    `Strongest R: ${strongestR}\n` +
+    `Strongest S: ${strongestS}\n` +
+    `Nearest R: ${nearestR}\n` +
+    `Nearest S: ${nearestS}`;
+  try{ await navigator.clipboard.writeText(text); }
+  catch{ document.getElementById("output").textContent = text; }
+  document.getElementById("tvCopiedValues").innerHTML =
+    `<div><b style="color:#ff9b9b">Strongest R:</b> ${strongestR || "—"}</div>` +
+    `<div><b style="color:#7dffa3">Strongest S:</b> ${strongestS || "—"}</div>` +
+    `<div><b style="color:#ffb060">Nearest R:</b> ${nearestR || "—"}</div>` +
+    `<div><b style="color:#80e0e0">Nearest S:</b> ${nearestS || "—"}</div>`;
+  document.getElementById("status").innerHTML = `<span class="ok">${t("statusCopiedTV")}</span>`;
+  document.getElementById("tvModal").classList.add("show");
+}
+
+function closeTVModal(){
+  document.getElementById("tvModal").classList.remove("show");
+}
+
+function togglePineCode(){
+  const box = document.getElementById("pineCodeBox");
+  if(box.style.display === "none"){
+    box.style.display = "block";
+    document.getElementById("pineCode").textContent = PINE_SCRIPT_CODE;
+  } else {
+    box.style.display = "none";
+  }
+}
+
+async function copyPineCode(){
+  try{
+    await navigator.clipboard.writeText(PINE_SCRIPT_CODE);
+    const el = document.getElementById("pineCopyStatus");
+    el.innerHTML = `<span class="ok">✅</span>`;
+    setTimeout(()=>{ el.innerHTML = ""; }, 2000);
+  }catch{}
+}
+
+const PINE_SCRIPT_CODE = `//@version=5
+indicator("XAUUSD Zones (Analyzer v7.2)", overlay=true, max_lines_count=500, max_labels_count=500)
+
+strongR_input = input.string("", "Strongest Resistances (comma-separated)", group="Strongest")
+strongS_input = input.string("", "Strongest Supports (comma-separated)", group="Strongest")
+nearR_input   = input.string("", "Nearest Resistances (comma-separated)", group="Nearest")
+nearS_input   = input.string("", "Nearest Supports (comma-separated)", group="Nearest")
+
+showLabels = input.bool(true, "Show Labels", group="Display")
+colStrongR = input.color(color.new(color.red, 0), "Strong R color", group="Colors", inline="s")
+colStrongS = input.color(color.new(color.green, 0), "Strong S color", group="Colors", inline="s")
+colNearR   = input.color(color.new(color.orange, 0), "Near R color", group="Colors", inline="n")
+colNearS   = input.color(color.new(color.aqua, 0), "Near S color", group="Colors", inline="n")
+
+parsePrices(s) =>
+    result = array.new_float()
+    if str.length(s) > 0
+        parts = str.split(s, ",")
+        for i = 0 to array.size(parts) - 1
+            cleaned = str.replace_all(str.trim(array.get(parts, i)), " ", "")
+            if str.length(cleaned) > 0
+                val = str.tonumber(cleaned)
+                if not na(val)
+                    array.push(result, val)
+    result
+
+strongR = parsePrices(strongR_input)
+strongS = parsePrices(strongS_input)
+nearR   = parsePrices(nearR_input)
+nearS   = parsePrices(nearS_input)
+
+drawLines(arr, col, width, style, prefix) =>
+    if array.size(arr) > 0
+        for i = 0 to array.size(arr) - 1
+            p = array.get(arr, i)
+            line.new(bar_index, p, bar_index + 500, p, color=col, width=width, style=style, extend=extend.both)
+            if showLabels
+                label.new(bar_index + 500, p, prefix + ": " + str.tostring(p, "#.##"), color=color.new(col, 70), textcolor=col, style=label.style_label_left, size=size.small)
+
+if barstate.islast
+    drawLines(strongR, colStrongR, 3, line.style_solid, "R-strong")
+    drawLines(strongS, colStrongS, 3, line.style_solid, "S-strong")
+    drawLines(nearR, colNearR, 1, line.style_dashed, "R-near")
+    drawLines(nearS, colNearS, 1, line.style_dashed, "S-near")
+
+atr14 = ta.atr(14)
+checkProximity(arr) =>
+    result = false
+    if array.size(arr) > 0
+        for i = 0 to array.size(arr) - 1
+            p = array.get(arr, i)
+            if math.abs(close - p) <= 0.3 * atr14
+                result := true
+                break
+    result
+
+alertcondition(checkProximity(strongR), "Near Strong Resistance", "Price near strong resistance")
+alertcondition(checkProximity(strongS), "Near Strong Support", "Price near strong support")
+alertcondition(checkProximity(nearR), "Near Resistance", "Price near resistance")
+alertcondition(checkProximity(nearS), "Near Support", "Price near support")
+`;
+
+currentLang = detectLang();
+document.documentElement.lang = currentLang;
+document.documentElement.dir = (currentLang === "fa") ? "rtl" : "ltr";
+document.getElementById("langSelect").value = currentLang;
+applyTranslations();
+loadApiKey();
+updateSessionBadge();
+setInterval(updateSessionBadge, 60000);
+</script>
+</body>
+</html>
