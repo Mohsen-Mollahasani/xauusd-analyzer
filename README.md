@@ -1,7 +1,7 @@
-# 📊 XAUUSD Analyzer v7.2
+# 📊 XAUUSD Analyzer v7.3
 
 [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Open_Tool-success?style=for-the-badge)](https://mohsen-mollahasani.github.io/xauusd-analyzer/)
-[![Version](https://img.shields.io/badge/version-7.2-blue?style=flat-square)](https://github.com/mohsen-mollahasani/xauusd-analyzer)
+[![Version](https://img.shields.io/badge/version-7.3-blue?style=flat-square)](https://github.com/mohsen-mollahasani/xauusd-analyzer)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
 [![Languages](https://img.shields.io/badge/languages-EN%20%7C%20FA%20%7C%20RU%20%7C%20ZH-orange?style=flat-square)](#)
 
@@ -18,7 +18,7 @@
 
 XAUUSD Analyzer is a client-side, single-file HTML tool that fetches Gold spot prices (via Twelve Data API, OANDA feed), computes multi-timeframe technical indicators, identifies ranked support/resistance zones, and generates a compact, AI-ready output for use with LLMs like Claude, GPT, or DeepSeek.
 
-It also generates ready-to-paste numbers for a companion **Pine Script** indicator on TradingView.
+It also generates ready-to-paste numbers for a companion **Pine Script** indicator on TradingView — and now tracks changes between sessions so you can instantly spot which levels shifted.
 
 ### Features
 
@@ -30,6 +30,7 @@ It also generates ready-to-paste numbers for a companion **Pine Script** indicat
 - **Divergence Detection:** RSI vs Price (4H & Daily)
 - **Session High/Low:** Asia, London, NY (DST-aware)
 - **Weekend Filter:** Removes fake weekend candles for accurate Ichimoku
+- **Pine History Tracking:** Remembers last anchor levels — changed numbers appear highlighted (bold + green) in the TradingView modal
 - **4 Languages:** English, Persian, Russian, Chinese
 - **AI-Ready Output:** Copy once, paste into any LLM
 - **TradingView Integration:** 4 copy-ready lines + Pine Script generator
@@ -58,17 +59,34 @@ The output includes:
 
 The output instructs the LLM to **respond in your current UI language** while keeping section headings in English.
 
+### Pine History Tracking (v7.3)
+
+When you click **Copy for TradingView**, the tool remembers the current set of anchor levels. Next time you use it:
+
+- **Unchanged numbers** → normal text
+- **Changed numbers** → **bold + green** highlight
+
+This helps you instantly spot which support/resistance levels have shifted since your last analysis session.
+
+- **First time:** all numbers appear highlighted (nothing to compare yet)
+- **"Reset History" button:** clears the saved snapshot so all numbers appear highlighted again
+- **Snapshot stored under:** `xauusd_last_pine` in localStorage
+- **Clipboard stays clean:** only the modal display is highlighted — the copied text is plain (ready to paste into TradingView)
+
 ### TradingView Setup
 
-1. Click **Copy for TradingView** — 4 lines are copied.
-2. Open the guide modal → click **Show / Copy Pine Script**.
+1. Click **Copy for TradingView** — 4 lines are copied and the modal opens.
+2. In the modal → click **Show / Copy Pine Script**.
 3. Paste the Pine Script into TradingView's Pine Editor → Save → Add to chart.
 4. In the indicator settings, paste each of the 4 lines into matching inputs.
 5. Lines appear on your chart (Strongest = thick, Nearest = dashed).
 
+**Tip:** Numbers highlighted in green in the modal are new/changed since your last copy.
+
 ### Privacy
 
 - **Your API key** is stored only in your browser's `localStorage`.
+- **Pine snapshot** is also stored only in `localStorage`.
 - **No tracking**, no analytics, no telemetry.
 - **No backend.** Everything runs client-side.
 
@@ -77,17 +95,22 @@ The output instructs the LLM to **respond in your current UI language** while ke
 - Pure HTML/CSS/JavaScript (no frameworks, no build step)
 - Twelve Data API (OANDA feed)
 - `Intl.DateTimeFormat` for DST-aware sessions
-- `localStorage` for language + API key persistence
+- `localStorage` for language, API key, and Pine history persistence
 
 ### Known Limitations
 
 - Data feed is Twelve Data's OANDA source — may differ slightly from your broker (1-5 USD on some candles).
 - Twelve Data free tier has rate limits (~8 requests/min).
 - Custom indicators are not supported on MT4/MT5 mobile — that's why we use TradingView Pine Script.
+- Pine history comparison is **index-based** (same position = same zone) — since zones are always sorted descending, this works reliably.
 
 ### Version History
 
-See the in-file header for detailed changes. Current: **v7.2**.
+- **v7.3** — Pine history tracking (highlight changed levels)
+- **v7.2** — Multilingual (EN/FA/RU/ZH), English session names in AI output
+- **v7.1** — TradingView setup modal, Pine Script generator
+- **v7.0** — English edition, API key input, donation support
+- **v6.x** — Ranked zones, ATR-based proximity, weighted confluence
 
 ### Donate
 
@@ -107,7 +130,7 @@ If this tool helps you, consider a small donation on BSC:
 
 XAUUSD Analyzer یه ابزار تحلیل تکنیکال تک‌فایل و سمت‌کاربره که قیمت لحظه‌ای طلا رو از Twelve Data (فید OANDA) می‌گیره، اندیکاتورهای چند تایم‌فریمی رو محاسبه می‌کنه، سطوح حمایت/مقاومت رتبه‌بندی‌شده رو استخراج می‌کنه، و یه خروجی فشرده آماده برای LLM هایی مثل Claude، GPT یا DeepSeek تولید می‌کنه.
 
-همچنین اعداد آماده برای یه اندیکاتور **Pine Script** روی TradingView تولید می‌کنه.
+همچنین اعداد آماده برای یه اندیکاتور **Pine Script** روی TradingView تولید می‌کنه — و الان تغییرات بین نشست‌ها رو هم رصد می‌کنه تا سریع بفهمی کدوم سطوح جابجا شدن.
 
 ### ویژگی‌ها
 
@@ -119,6 +142,7 @@ XAUUSD Analyzer یه ابزار تحلیل تکنیکال تک‌فایل و س�
 - **تشخیص واگرایی:** RSI vs Price روی 4H و Daily
 - **سقف/کف سشن:** آسیا، لندن، نیویورک (با DST خودکار)
 - **فیلتر آخر هفته:** حذف کندل‌های تعطیل برای Ichimoku دقیق
+- **رصد تغییرات Pine:** آخرین سطوح anchor رو به یاد می‌سپاره — اعدادی که تغییر کردن توی مودال TradingView بولد سبز نشون داده می‌شن
 - **۴ زبانه:** انگلیسی، فارسی، روسی، چینی
 - **خروجی آماده AI:** یه بار کپی، پیست توی هر LLM
 - **یکپارچگی TradingView:** ۴ خط آماده + تولید Pine Script
@@ -147,17 +171,34 @@ XAUUSD Analyzer یه ابزار تحلیل تکنیکال تک‌فایل و س�
 
 خروجی به LLM دستور می‌ده که **به زبون فعلی UI** پاسخ بده، ولی عنوان بخش‌ها انگلیسی بمونه.
 
+### رصد تغییرات Pine (نسخه ۷.۳)
+
+وقتی روی **Copy for TradingView** می‌زنی، ابزار آخرین سطوح anchor رو ذخیره می‌کنه. دفعه‌ی بعد:
+
+- **اعداد بدون تغییر** → متن عادی
+- **اعداد تغییرکرده** → **بولد سبز**
+
+این کمک می‌کنه سریع بفهمی کدوم سطوح حمایت/مقاومت از آخرین تحلیل جابجا شدن.
+
+- **بار اول:** همه‌ی اعداد بولد می‌شن (چیزی برای مقایسه نیست)
+- **دکمه‌ی Reset History:** حافظه رو پاک می‌کنه تا همه بولد بشن
+- **ذخیره‌سازی:** کلید `xauusd_last_pine` توی localStorage
+- **کلیپ‌بورد تمیز می‌مونه:** فقط نمایش توی مودال بولد می‌شه — متن کپی‌شده ساده‌ست (آماده برای TradingView)
+
 ### راه‌اندازی TradingView
 
-۱. روی **Copy for TradingView** بزن — ۴ خط کپی می‌شه.
-۲. مودال راهنما باز می‌شه → **Show / Copy Pine Script** رو بزن.
+۱. روی **Copy for TradingView** بزن — ۴ خط کپی می‌شه و مودال باز می‌شه.
+۲. توی مودال → **Show / Copy Pine Script** رو بزن.
 ۳. کد Pine رو توی Pine Editor پیست کن → Save → Add to chart.
 ۴. توی تنظیمات اندیکاتور، هر خط رو توی input مربوطه پیست کن.
 ۵. خطوط روی چارت ظاهر می‌شن (Strongest = ضخیم، Nearest = خط‌چین).
 
+**نکته:** اعدادی که توی مودال سبز نشون داده می‌شن، از آخرین کپی جدید/تغییرکرده هستن.
+
 ### حریم خصوصی
 
 - **API Key** فقط توی `localStorage` مرورگر خودت ذخیره می‌شه.
+- **حافظه‌ی Pine** هم فقط توی `localStorage` ذخیره می‌شه.
 - **هیچ tracking، آنالیتیکس یا تلمتری** وجود نداره.
 - **بدون backend.** همه چیز سمت کاربر اجرا می‌شه.
 
@@ -166,17 +207,22 @@ XAUUSD Analyzer یه ابزار تحلیل تکنیکال تک‌فایل و س�
 - HTML/CSS/JavaScript خالص (بدون فریمورک، بدون build)
 - Twelve Data API (فید OANDA)
 - `Intl.DateTimeFormat` برای سشن‌های DST-aware
-- `localStorage` برای ذخیره‌ی زبان + کلید
+- `localStorage` برای ذخیره‌ی زبان، API Key و تاریخچه‌ی Pine
 
 ### محدودیت‌ها
 
 - فید داده OANDA هست — ممکنه با بروکرت ۱-۵ دلار اختلاف داشته باشه.
 - پلن رایگان Twelve Data محدودیت درخواست داره (~۸ در دقیقه).
 - اندیکاتور سفارشی روی MT4/MT5 موبایل پشتیبانی نمی‌شه — برای همین از TradingView استفاده می‌کنیم.
+- مقایسه‌ی تاریخچه‌ی Pine بر اساس **ایندکس** هست (موقعیت یکسان = zone یکسان) — چون سطوح همیشه نزولی مرتب می‌شن، این روش قابلاعتماده.
 
 ### تاریخچه نسخه‌ها
 
-جزئیات تغییرات توی هدر فایل هست. نسخه فعلی: **v7.2**.
+- **v7.3** — رصد تغییرات Pine (بولد کردن سطوح تغییرکرده)
+- **v7.2** — چندزبانه (EN/FA/RU/ZH)، اسم سشن انگلیسی در خروجی AI
+- **v7.1** — مودال راهنمای TradingView، تولید Pine Script
+- **v7.0** — نسخه انگلیسی، ورودی API Key، حمایت مالی
+- **v6.x** — سطوح رتبه‌بندی‌شده، Proximity بر اساس ATR، هم‌رأیی وزن‌دار
 
 ### حمایت
 
@@ -196,7 +242,7 @@ XAUUSD Analyzer یه ابزار تحلیل تکنیکال تک‌فایل و س�
 
 XAUUSD Analyzer — это одностраничный HTML-инструмент, работающий в браузере, который получает цены на золото (через API Twelve Data, фид OANDA), рассчитывает многотаймфреймовые технические индикаторы, определяет ранжированные зоны поддержки/сопротивления и формирует компактный вывод, готовый к использованию в LLM (Claude, GPT, DeepSeek).
 
-Также генерирует готовые числа для индикатора **Pine Script** в TradingView.
+Также генерирует готовые числа для индикатора **Pine Script** в TradingView — и теперь отслеживает изменения между сессиями, чтобы вы сразу видели, какие уровни сдвинулись.
 
 ### Возможности
 
@@ -208,6 +254,7 @@ XAUUSD Analyzer — это одностраничный HTML-инструмен�
 - **Дивергенция:** RSI vs Price (4H и Daily)
 - **Максимум/минимум сессии:** Азия, Лондон, Нью-Йорк (с учётом DST)
 - **Фильтр выходных:** Удаляет фальшивые свечи выходных для точного Ichimoku
+- **Отслеживание Pine:** Запоминает последние уровни anchor — изменённые числа выделяются (жирный + зелёный) в модальном окне TradingView
 - **4 языка:** английский, персидский, русский, китайский
 - **Вывод для AI:** Копировать один раз — вставить в любой LLM
 - **Интеграция с TradingView:** 4 готовые строки + генератор Pine Script
@@ -236,17 +283,34 @@ XAUUSD Analyzer — это одностраничный HTML-инструмен�
 
 Вывод говорит LLM **отвечать на текущем языке интерфейса**, сохраняя заголовки разделов на английском.
 
+### Отслеживание Pine (v7.3)
+
+Когда вы нажимаете **Copy for TradingView**, инструмент запоминает текущий набор уровней anchor. В следующий раз:
+
+- **Неизменённые числа** → обычный текст
+- **Изменённые числа** → **жирный + зелёный**
+
+Это помогает сразу видеть, какие уровни поддержки/сопротивления сместились с прошлой сессии анализа.
+
+- **Первый раз:** все числа выделены (не с чем сравнивать)
+- **Кнопка "Reset History":** очищает сохранённый снимок, чтобы все числа снова выделялись
+- **Снимок хранится под ключом:** `xauusd_last_pine` в localStorage
+- **Буфер обмена остаётся чистым:** выделение только в модальном окне — скопированный текст простой (готов для TradingView)
+
 ### Настройка TradingView
 
-1. Нажмите **Copy for TradingView** — 4 строки скопированы.
-2. Откроется руководство → **Show / Copy Pine Script**.
+1. Нажмите **Copy for TradingView** — 4 строки скопированы и открывается модальное окно.
+2. В окне → **Show / Copy Pine Script**.
 3. Вставьте Pine Script в редактор TradingView → Save → Add to chart.
 4. В настройках индикатора вставьте каждую из 4 строк в нужное поле.
 5. Линии появятся на графике (Strongest = толстые, Nearest = пунктирные).
 
+**Совет:** числа, выделенные зелёным в модальном окне, новые или изменённые с момента последнего копирования.
+
 ### Приватность
 
 - **Ваш API-ключ** хранится только в `localStorage` браузера.
+- **Снимок Pine** также хранится только в `localStorage`.
 - **Нет отслеживания**, аналитики, телеметрии.
 - **Без backend.** Всё работает на стороне клиента.
 
@@ -255,17 +319,22 @@ XAUUSD Analyzer — это одностраничный HTML-инструмен�
 - Чистый HTML/CSS/JavaScript (без фреймворков и сборки)
 - Twelve Data API (фид OANDA)
 - `Intl.DateTimeFormat` для сессий с DST
-- `localStorage` для языка и ключа
+- `localStorage` для языка, API-ключа и истории Pine
 
 ### Известные ограничения
 
 - Данные — от OANDA — могут незначительно отличаться от вашего брокера (1-5 USD).
 - Бесплатный тариф Twelve Data имеет лимиты (~8 запросов/мин).
 - Пользовательские индикаторы не поддерживаются в MT4/MT5 mobile — поэтому используется Pine Script.
+- Сравнение истории Pine **по индексу** (одна позиция = одна зона) — так как зоны всегда отсортированы по убыванию, это работает надёжно.
 
 ### История версий
 
-Подробности в заголовке файла. Текущая: **v7.2**.
+- **v7.3** — Отслеживание Pine (выделение изменённых уровней)
+- **v7.2** — Многоязычность (EN/FA/RU/ZH), английские названия сессий в выводе AI
+- **v7.1** — Модальное окно TradingView, генератор Pine Script
+- **v7.0** — Английская версия, ввод API-ключа, поддержка донатами
+- **v6.x** — Ранжированные зоны, ATR-based близость, взвешенная конвергенция
 
 ### Поддержать
 
@@ -285,7 +354,7 @@ XAUUSD Analyzer — это одностраничный HTML-инструмен�
 
 XAUUSD Analyzer 是一款单文件、浏览器端的 HTML 工具。它通过 Twelve Data API（OANDA 数据源）获取黄金现货价格，计算多周期技术指标，识别分级支撑/阻力区域，并生成紧凑的、可供 LLM（如 Claude、GPT、DeepSeek）使用的输出。
 
-同时生成可直接粘贴到 TradingView **Pine Script** 指标的数值。
+同时生成可直接粘贴到 TradingView **Pine Script** 指标的数值 — 并新增会话间变化追踪，让您一眼看出哪些水平发生移动。
 
 ### 功能特性
 
@@ -297,6 +366,7 @@ XAUUSD Analyzer 是一款单文件、浏览器端的 HTML 工具。它通过 Twe
 - **背离检测：** RSI 与价格（4H 和日线）
 - **时段高/低：** 亚洲、伦敦、纽约（自动处理夏令时）
 - **周末过滤：** 移除虚假周末蜡烛，确保 Ichimoku 准确
+- **Pine 变化追踪：** 记住上次的锚点水平 — 变化数字在 TradingView 弹窗中以**粗体 + 绿色**高亮显示
 - **4 种语言：** 英语、波斯语、俄语、中文
 - **AI 就绪输出：** 复制一次，粘贴到任意 LLM
 - **TradingView 集成：** 4 行即用数据 + Pine Script 生成器
@@ -325,17 +395,34 @@ XAUUSD Analyzer 是一款单文件、浏览器端的 HTML 工具。它通过 Twe
 
 输出会指示 LLM **使用当前界面语言回答**，同时保持小节标题为英文。
 
+### Pine 变化追踪（v7.3）
+
+当您点击 **Copy for TradingView** 时，工具会记住当前的锚点水平集合。下次使用时：
+
+- **未变化的数字** → 普通文本
+- **变化的数字** → **粗体 + 绿色**高亮
+
+这帮助您立即看出自上次分析会话以来哪些支撑/阻力水平发生了移动。
+
+- **首次使用：** 所有数字都会高亮（无对比对象）
+- **"Reset History" 按钮：** 清除保存的快照，使所有数字再次高亮
+- **快照存储键：** localStorage 中的 `xauusd_last_pine`
+- **剪贴板保持干净：** 仅弹窗中的显示高亮 — 复制的文本是纯文本（可直接粘贴到 TradingView）
+
 ### TradingView 设置
 
-1. 点击 **Copy for TradingView** — 已复制 4 行。
-2. 打开指南弹窗 → 点击 **Show / Copy Pine Script**。
+1. 点击 **Copy for TradingView** — 已复制 4 行，并打开弹窗。
+2. 在弹窗中 → 点击 **Show / Copy Pine Script**。
 3. 将 Pine Script 粘贴到 TradingView 的 Pine 编辑器中 → Save → Add to chart。
 4. 在指标设置中，将 4 行分别粘贴到对应输入框。
 5. 线条出现在图表上（最强 = 粗线，最近 = 虚线）。
 
+**提示：** 弹窗中绿色高亮的数字是自上次复制以来新增或变化的。
+
 ### 隐私
 
 - **您的 API 密钥** 仅存储在浏览器的 `localStorage` 中。
+- **Pine 快照** 也仅存储在 `localStorage` 中。
 - **无跟踪**、无分析、无遥测。
 - **无后端。** 全部在客户端运行。
 
@@ -344,17 +431,22 @@ XAUUSD Analyzer 是一款单文件、浏览器端的 HTML 工具。它通过 Twe
 - 纯 HTML/CSS/JavaScript（无框架、无构建）
 - Twelve Data API（OANDA 数据源）
 - `Intl.DateTimeFormat` 用于夏令时时段
-- `localStorage` 用于语言和密钥持久化
+- `localStorage` 用于语言、API 密钥和 Pine 历史持久化
 
 ### 已知限制
 
 - 数据源为 OANDA，可能与您的经纪商略有差异（部分蜡烛差 1-5 美元）。
 - Twelve Data 免费套餐有限速（约 8 次/分钟）。
 - MT4/MT5 移动端不支持自定义指标 — 因此使用 TradingView Pine Script。
+- Pine 历史对比基于**索引**（相同位置 = 同一区域）— 由于区域始终按降序排列，该方法可靠。
 
 ### 版本历史
 
-详细变更见文件头部。当前版本：**v7.2**。
+- **v7.3** — Pine 变化追踪（高亮变化的水平）
+- **v7.2** — 多语言（EN/FA/RU/ZH），AI 输出中使用英文时段名称
+- **v7.1** — TradingView 设置弹窗，Pine Script 生成器
+- **v7.0** — 英文版，API 密钥输入，捐赠支持
+- **v6.x** — 分级区域、基于 ATR 的接近度、加权汇合
 
 ### 捐赠
 
