@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>XAUUSD Analyzer v7.2 – Multilingual</title>
+<title>XAUUSD Analyzer v7.3 – Multilingual</title>
 <style>
   body{font-family:Tahoma,Arial,sans-serif;max-width:1100px;margin:auto;padding:14px;background:#0f0f0f;color:#e6e6e6;line-height:1.45}
   h1{font-size:20px;margin:0 0 10px}
@@ -49,7 +49,7 @@
 </head>
 <body>
 
-<h1 data-i18n="title">📊 XAUUSD Analyzer v7.2</h1>
+<h1 data-i18n="title">📊 XAUUSD Analyzer v7.3</h1>
 <p class="small" data-i18n="subtitle">Weighted Confluence | Ranked Zones | AI-Ready Output</p>
 
 <div class="box" style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:8px 12px">
@@ -147,6 +147,7 @@
       <b data-i18n="tvStep3Title">Paste the 4 lines</b>
       <p class="small" style="margin:6px 0" data-i18n="tvStep3Text">Each line matches one input.</p>
       <div id="tvCopiedValues" class="small" style="background:#0a0a0a;padding:8px;border-radius:6px;font-family:monospace;margin-top:8px"></div>
+      <button class="secondary" style="margin-top:8px;font-size:12px;padding:5px 10px" onclick="resetPineHistory()">🗑 Reset History</button>
     </div>
     <div class="step">
       <span class="step-num">4</span>
@@ -160,7 +161,7 @@
 <script>
 const TRANSLATIONS = {
   en: {
-    title: "📊 XAUUSD Analyzer v7.2",
+    title: "📊 XAUUSD Analyzer v7.3",
     subtitle: "Weighted Confluence | Ranked Zones | AI-Ready Output",
     language: "Language:",
     apiKeyTitle: "🔑 API Key Setup",
@@ -235,7 +236,7 @@ const TRANSLATIONS = {
     sessionLowVol: "Low Volume / Closed"
   },
   fa: {
-    title: "📊 تحلیل‌گر XAUUSD نسخه 7.2",
+    title: "📊 تحلیل‌گر XAUUSD نسخه 7.3",
     subtitle: "هم‌رأیی وزن‌دار | سطوح رتبه‌بندی‌شده | خروجی آماده برای AI",
     language: "زبان:",
     apiKeyTitle: "🔑 تنظیم کلید API",
@@ -310,7 +311,7 @@ const TRANSLATIONS = {
     sessionLowVol: "بازار کم‌حجم / بسته"
   },
   ru: {
-    title: "📊 Анализатор XAUUSD v7.2",
+    title: "📊 Анализатор XAUUSD v7.3",
     subtitle: "Взвешенная конвергенция | Ранжированные зоны | Готово для AI",
     language: "Язык:",
     apiKeyTitle: "🔑 Настройка API-ключа",
@@ -385,7 +386,7 @@ const TRANSLATIONS = {
     sessionLowVol: "Закрыто"
   },
   zh: {
-    title: "📊 XAUUSD 分析器 v7.2",
+    title: "📊 XAUUSD 分析器 v7.3",
     subtitle: "加权汇合 | 分级区域 | AI 就绪",
     language: "语言：",
     apiKeyTitle: "🔑 API 密钥",
@@ -585,6 +586,43 @@ async function copyWallet(){
   }catch{}
 }
 
+/* ============================================================
+   v7.3: Pine Script history tracking
+   ============================================================ */
+const LS_KEY_PINE = "xauusd_last_pine";
+
+function getLastPine(){
+  try {
+    const raw = localStorage.getItem(LS_KEY_PINE);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
+function savePine(obj){
+  try {
+    localStorage.setItem(LS_KEY_PINE, JSON.stringify(obj));
+  } catch {}
+}
+
+function renderNumberList(newNums, oldNums){
+  // newNums, oldNums: array of strings (each number formatted to 2 decimals)
+  // Output: HTML string — changed ones are bold + green
+  return newNums.map((n, i) => {
+    const changed = !oldNums || oldNums[i] !== n;
+    return changed
+      ? `<b style="color:#7dffa3">${n}</b>`
+      : `${n}`;
+  }).join(", ");
+}
+
+function resetPineHistory(){
+  localStorage.removeItem(LS_KEY_PINE);
+  const el = document.getElementById("status");
+  if(el) el.textContent = "✅ Pine history cleared. Next time all numbers will be highlighted.";
+}
+
+/* ============================================================ */
+
 const TIMEFRAMES_ALL = [
   {key:"30m",  label:"30M",  interval:"30min"},
   {key:"1h",   label:"1H",   interval:"1h"},
@@ -625,7 +663,6 @@ function getLocalParts(timeZone){
   return {wd, h, m, minutes: h*60 + m};
 }
 
-/* ✅ v7.2: دو نسخه — یکی ترجمه‌شده برای UI، یکی انگلیسی برای AI */
 function getGoldSessionRaw(){
   const now = new Date();
   const day = now.getUTCDay();
@@ -1158,10 +1195,9 @@ function calcConfluence(){
   };
 }
 
-/* ✅ v7.2: استفاده از getGoldSessionRaw() — انگلیسی خالص برای AI */
 function makeOutput(){
   const session = getGoldSessionRaw();
-  let out = "XAUUSD QUICK MULTI-TF DATA (v7.2)\n";
+  let out = "XAUUSD QUICK MULTI-TF DATA (v7.3)\n";
   out += "Time: " + (lastUpdate ? lastUpdate.toISOString() : new Date().toISOString()) + "\n";
   out += "Session: " + session.name + "\n";
   out += "Mode: " + (higherOnlyMode ? "Higher TF only (4H+Daily)" : "All TF") + "\n";
@@ -1460,24 +1496,45 @@ async function copyForTradingView(){
     document.getElementById("status").textContent = "❌ Load data first.";
     return;
   }
-  const fmtList = (arr) => arr.map(l => fmt(l.anchorPrice)).join(", ");
-  const strongestR = fmtList(L.strongestResistances);
-  const strongestS = fmtList(L.strongestSupports);
-  const nearestR   = fmtList(L.nearestResistances);
-  const nearestS   = fmtList(L.nearestSupports);
-  const text =
-    `Strongest R: ${strongestR}\n` +
-    `Strongest S: ${strongestS}\n` +
-    `Nearest R: ${nearestR}\n` +
-    `Nearest S: ${nearestS}`;
-  try{ await navigator.clipboard.writeText(text); }
-  catch{ document.getElementById("output").textContent = text; }
-  document.getElementById("tvCopiedValues").innerHTML =
-    `<div><b style="color:#ff9b9b">Strongest R:</b> ${strongestR || "—"}</div>` +
-    `<div><b style="color:#7dffa3">Strongest S:</b> ${strongestS || "—"}</div>` +
-    `<div><b style="color:#ffb060">Nearest R:</b> ${nearestR || "—"}</div>` +
-    `<div><b style="color:#80e0e0">Nearest S:</b> ${nearestS || "—"}</div>`;
+
+  const fmtList = (arr) => arr.map(l => fmt(l.anchorPrice));
+  const strongestRArr = fmtList(L.strongestResistances);
+  const strongestSArr = fmtList(L.strongestSupports);
+  const nearestRArr   = fmtList(L.nearestResistances);
+  const nearestSArr   = fmtList(L.nearestSupports);
+
+  // Plain text for clipboard (no HTML tags)
+  const plainText =
+    `Strongest R: ${strongestRArr.join(", ")}\n` +
+    `Strongest S: ${strongestSArr.join(", ")}\n` +
+    `Nearest R: ${nearestRArr.join(", ")}\n` +
+    `Nearest S: ${nearestSArr.join(", ")}`;
+
+  try { await navigator.clipboard.writeText(plainText); }
+  catch { document.getElementById("output").textContent = plainText; }
+
+  // Read previous snapshot for comparison
+  const last = getLastPine();
+
+  // Build display HTML — changed numbers are bold + green
+  const html =
+    `<div><b style="color:#ff9b9b">Strongest R:</b> ${renderNumberList(strongestRArr, last?.strongestR)}</div>` +
+    `<div><b style="color:#7dffa3">Strongest S:</b> ${renderNumberList(strongestSArr, last?.strongestS)}</div>` +
+    `<div><b style="color:#ffb060">Nearest R:</b> ${renderNumberList(nearestRArr, last?.nearestR)}</div>` +
+    `<div><b style="color:#80e0e0">Nearest S:</b> ${renderNumberList(nearestSArr, last?.nearestS)}</div>`;
+
+  document.getElementById("tvCopiedValues").innerHTML = html;
   document.getElementById("status").innerHTML = `<span class="ok">${t("statusCopiedTV")}</span>`;
+
+  // Save current snapshot
+  savePine({
+    strongestR: strongestRArr,
+    strongestS: strongestSArr,
+    nearestR: nearestRArr,
+    nearestS: nearestSArr,
+    timestamp: Date.now()
+  });
+
   document.getElementById("tvModal").classList.add("show");
 }
 
@@ -1505,7 +1562,7 @@ async function copyPineCode(){
 }
 
 const PINE_SCRIPT_CODE = `//@version=5
-indicator("XAUUSD Zones (Analyzer v7.2)", overlay=true, max_lines_count=500, max_labels_count=500)
+indicator("XAUUSD Zones (Analyzer v7.3)", overlay=true, max_lines_count=500, max_labels_count=500)
 
 strongR_input = input.string("", "Strongest Resistances (comma-separated)", group="Strongest")
 strongS_input = input.string("", "Strongest Supports (comma-separated)", group="Strongest")
