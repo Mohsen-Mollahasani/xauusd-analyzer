@@ -1,49 +1,113 @@
 //@version=5
-indicator("XAUUSD Zones (Analyzer v7.2)", overlay=true, max_lines_count=500, max_labels_count=500)
+indicator("XAUUSD Zones (Analyzer v7.5.1)", overlay=true, max_lines_count=500, max_labels_count=500)
 
-strongR_input = input.string("", "Strongest Resistances (comma-separated)", group="Strongest")
-strongS_input = input.string("", "Strongest Supports (comma-separated)", group="Strongest")
-nearR_input   = input.string("", "Nearest Resistances (comma-separated)", group="Nearest")
-nearS_input   = input.string("", "Nearest Supports (comma-separated)", group="Nearest")
+// ============================================================
+// XAUUSD Analyzer v7.5.1 — Pine Script Companion
+// 
+// Instructions:
+// 1. Copy the single line from the analyzer's "Copy Line" button
+// 2. Paste it into the "All Zones" input below
+// 3. Lines will appear on your chart automatically
+//
+// Format: 40 values (20 prices + 20 tiers)
+//   [Strongest R: 5 prices] [5 tiers]
+//   [Strongest S: 5 prices] [5 tiers]
+//   [Nearest R:   5 prices] [5 tiers]
+//   [Nearest S:   5 prices] [5 tiers]
+//
+// The 5th value in each group is the Weekly zone (index 4)
+// ============================================================
 
+all_data_input = input.string("", "All Zones (paste the single line here)", group="Zones")
 showLabels = input.bool(true, "Show Labels", group="Display")
-colStrongR = input.color(color.new(color.red, 0), "Strong R color", group="Colors", inline="s")
-colStrongS = input.color(color.new(color.green, 0), "Strong S color", group="Colors", inline="s")
-colNearR   = input.color(color.new(color.orange, 0), "Near R color", group="Colors", inline="n")
-colNearS   = input.color(color.new(color.aqua, 0), "Near S color", group="Colors", inline="n")
 
-parsePrices(s) =>
-    result = array.new_float()
+// ============================================================
+// Parse the combined string — extract numbers and tiers separately
+// ============================================================
+parseAll(s) =>
+    nums = array.new_float()
+    tiers = array.new_string()
+    
     if str.length(s) > 0
         parts = str.split(s, ",")
         for i = 0 to array.size(parts) - 1
-            cleaned = str.replace_all(str.trim(array.get(parts, i)), " ", "")
-            if str.length(cleaned) > 0
+            cleaned = str.upper(str.trim(array.get(parts, i)))
+            if cleaned == "A" or cleaned == "B" or cleaned == "C"
+                array.push(tiers, cleaned)
+            else
                 val = str.tonumber(cleaned)
                 if not na(val)
-                    array.push(result, val)
-    result
+                    array.push(nums, val)
+    [nums, tiers]
 
-strongR = parsePrices(strongR_input)
-strongS = parsePrices(strongS_input)
-nearR   = parsePrices(nearR_input)
-nearS   = parsePrices(nearS_input)
+[allNums, allTiers] = parseAll(all_data_input)
 
-drawLines(arr, col, width, style, prefix) =>
-    if array.size(arr) > 0
-        for i = 0 to array.size(arr) - 1
-            p = array.get(arr, i)
-            line.new(bar_index, p, bar_index + 500, p, color=col, width=width, style=style, extend=extend.both)
-            if showLabels
-                label.new(bar_index + 500, p, prefix + ": " + str.tostring(p, "#.##"), color=color.new(col, 70), textcolor=col, style=label.style_label_left, size=size.small)
+// ============================================================
+// Color/width based on tier (and Weekly special)
+// ============================================================
+getZoneColor(tier, isWeekly) =>
+    isWeekly ? color.new(#80c0e0, 0) :          // 🔵 Blue for Weekly
+     tier == "A" ? color.new(#FFD700, 0) :      // 🟡 Gold for Tier A
+     tier == "B" ? color.new(#FFA060, 0) :      // 🟠 Orange for Tier B
+     color.new(color.gray, 40)                   // ⚪ Gray for Tier C
 
+getZoneWidth(tier, isWeekly) =>
+    isWeekly ? 5 :                              // Weekly: thickest
+     tier == "A" ? 4 :                          // Tier A: thick
+     tier == "B" ? 2 :                          // Tier B: medium
+     1                                          // Tier C: thin
+
+getZoneStyle(tier, isWeekly) =>
+    isWeekly ? line.style_solid :
+     tier == "A" ? line.style_solid :
+     tier == "B" ? line.style_solid :
+     line.style_dashed                          // Tier C: dashed
+
+// ============================================================
+// Draw a single zone line
+// ============================================================
+drawZone(numIdx, tierIdx, prefix, isWeekly) =>
+    if array.size(allNums) > numIdx and array.size(allTiers) > tierIdx
+        p = array.get(allNums, numIdx)
+        tier = array.get(allTiers, tierIdx)
+        col = getZoneColor(tier, isWeekly)
+        w = getZoneWidth(tier, isWeekly)
+        st = getZoneStyle(tier, isWeekly)
+        
+        line.new(bar_index, p, bar_index + 500, p, 
+                 color=col, width=w, style=st, extend=extend.both)
+        
+        if showLabels
+            labelText = prefix + (isWeekly ? " [W]" : " [" + tier + "]") + ": " + str.tostring(p, "#.##")
+            label.new(bar_index + 500, p, labelText,
+                     color=color.new(col, 70), textcolor=col,
+                     style=label.style_label_left, size=size.small)
+
+// ============================================================
+// Draw all zones
+// ============================================================
 if barstate.islast
-    drawLines(strongR, colStrongR, 3, line.style_solid, "R-strong")
-    drawLines(strongS, colStrongS, 3, line.style_solid, "S-strong")
-    drawLines(nearR, colNearR, 1, line.style_dashed, "R-near")
-    drawLines(nearS, colNearS, 1, line.style_dashed, "S-near")
+    // Strongest Resistances (indices 0-4, last is Weekly)
+    for i = 0 to 4
+        drawZone(i, i, "S-R", i == 4)
+    
+    // Strongest Supports (indices 5-9)
+    for i = 0 to 4
+        drawZone(5 + i, 5 + i, "S-S", i == 4)
+    
+    // Nearest Resistances (indices 10-14)
+    for i = 0 to 4
+        drawZone(10 + i, 10 + i, "N-R", i == 4)
+    
+    // Nearest Supports (indices 15-19)
+    for i = 0 to 4
+        drawZone(15 + i, 15 + i, "N-S", i == 4)
 
+// ============================================================
+// Alerts — price near any zone
+// ============================================================
 atr14 = ta.atr(14)
+
 checkProximity(arr) =>
     result = false
     if array.size(arr) > 0
@@ -54,7 +118,4 @@ checkProximity(arr) =>
                 break
     result
 
-alertcondition(checkProximity(strongR), "Near Strong Resistance", "Price near strong resistance")
-alertcondition(checkProximity(strongS), "Near Strong Support", "Price near strong support")
-alertcondition(checkProximity(nearR), "Near Resistance", "Price near resistance")
-alertcondition(checkProximity(nearS), "Near Support", "Price near support")
+alertcondition(checkProximity(allNums), "Near Zone", "Price near a zone")
